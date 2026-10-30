@@ -1,6 +1,10 @@
 name: Testar render Quarto + webR — Pilot 01
 
 on:
+  push:
+    branches:
+      - pilot01-render-test
+      - pilot01-e1e4-core
   workflow_dispatch:
 
 permissions:
