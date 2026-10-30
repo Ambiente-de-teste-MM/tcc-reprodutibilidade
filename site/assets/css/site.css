@@ -1,10 +1,124 @@
-.visual-placeholder {
-  border: 1px dashed #777;
-  padding: 1.25rem;
-  margin: 1.5rem 0;
-  text-align: center;
+:root {
+  --tcc-ink: #1f2933;
+  --tcc-muted: #5f6b76;
+  --tcc-line: #d8dee4;
+  --tcc-soft: #f6f8fa;
+  --tcc-accent: #245b78;
+  --tcc-accent-soft: #edf4f7;
+}
+
+body {
+  color: var(--tcc-ink);
+}
+
+.hero-panel {
+  padding: 1.5rem 1.75rem;
+  margin: 0 0 2rem 0;
+  border-left: 4px solid var(--tcc-accent);
+  background: var(--tcc-accent-soft);
   border-radius: .35rem;
 }
-.visual-slot { margin: 1.5rem 0; }
-.visual-svg { width: 100%; height: auto; }
-.visual-caption { font-size: .9rem; margin-top: .5rem; }
+
+.hero-panel p:last-child {
+  margin-bottom: 0;
+}
+
+.route-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0 2rem 0;
+}
+
+.route-card {
+  border: 1px solid var(--tcc-line);
+  border-radius: .5rem;
+  padding: 1.15rem 1.2rem;
+  background: #fff;
+}
+
+.route-card h3 {
+  margin-top: 0;
+  font-size: 1.05rem;
+}
+
+.route-card p:last-child {
+  margin-bottom: 0;
+}
+
+.fact-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .75rem;
+  margin: 1rem 0 2rem 0;
+}
+
+.fact-item {
+  padding: .85rem 1rem;
+  border-top: 2px solid var(--tcc-line);
+}
+
+.fact-item strong {
+  display: block;
+  font-size: 1.1rem;
+}
+
+.fact-item span {
+  color: var(--tcc-muted);
+  font-size: .9rem;
+}
+
+.execution-stage {
+  border-left: 3px solid var(--tcc-line);
+  padding-left: 1rem;
+  margin: 1.2rem 0;
+}
+
+.execution-placeholder {
+  border: 1px solid var(--tcc-line);
+  background: var(--tcc-soft);
+  padding: 1.4rem;
+  margin: 1.5rem 0;
+  border-radius: .5rem;
+}
+
+.status-line {
+  color: var(--tcc-muted);
+  font-size: .92rem;
+}
+
+.visual-placeholder {
+  border: 1px dashed #7a8792;
+  padding: 1.4rem;
+  margin: 1.75rem 0;
+  text-align: center;
+  border-radius: .45rem;
+  background: var(--tcc-soft);
+}
+
+.visual-slot {
+  margin: 1.75rem 0;
+}
+
+.visual-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.visual-caption {
+  color: var(--tcc-muted);
+  font-size: .9rem;
+  margin-top: .6rem;
+}
+
+.table {
+  font-size: .95rem;
+}
+
+@media (max-width: 900px) {
+  .route-grid,
+  .fact-strip {
+    grid-template-columns: 1fr;
+  }
+}
