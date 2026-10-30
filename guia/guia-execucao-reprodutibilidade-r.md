@@ -1,7 +1,8 @@
 <!--
 Publication mirror derived from Google Doc: tcc_stage-viii_guia-execucao-reprodutibilidade-r_draft_2026-10-29_v13
 Drive ID: 1httY8nO8TQuPFFxx3qO7Q0svKYLLBGzJq7OIXhcWS54
-Status at integration: Pass 05 candidate; not a new substantive version.
+Source revision after browser/local scope conformity repair: AHj4eMTRBoeFpBnOiUNfg6A7gw47rkPE4X0FZQQF1NKFNWbmb7Hocw-GY8wbcT-SpOnzvcSQyrrKMgUgLRZfnl_Qw2OD4hsJ_mfgFoitNg
+Status at synchronization: Pass 05 candidate; not a new substantive version.
 Normalization: removed Google Docs export escaping only.
 -->
 
@@ -15,7 +16,7 @@ Normalization: removed Google Docs export escaping only.
 
 **O guia avança da estrutura da pesquisa até a validação da reprodução.** O percurso começa pelo desenho analítico, passa pela construção dos dados e pelas estimações e termina nos resultados, diagnósticos e verificações de reprodução.
 
-**A execução no navegador complementa a reprodução local.** Partes centrais da análise podem ser executadas diretamente pela versão web, enquanto o Pacote de Reprodutibilidade em R preserva os arquivos, a documentação estática e as instruções necessárias para uma reprodução local completa.
+**A execução no navegador e a reprodução local percorrem o mesmo fluxo analítico.** A versão web permite executar a reprodução diretamente no navegador, sem instalação local de R, enquanto o Pacote de Reprodutibilidade em R oferece acesso direto ao código, aos arquivos gerados e ao ambiente de execução para inspeção e validação mais controladas.
 
 ---
 
@@ -62,7 +63,7 @@ Normalization: removed Google Docs export escaping only.
 
 **A leitura sequencial acompanha a análise do desenho empírico aos resultados.** Ela passa pela construção dos dados, pela forma como a reprodução é executada e, ao final, pelos limites e verificações da análise.
 
-**No navegador, partes centrais da análise podem ser executadas sem uma instalação local de R.** A versão web utiliza os mesmos dados e especificações da reprodução e sua compatibilidade numérica com os resultados de referência já foi verificada.
+**No navegador, a análise pode ser reproduzida sem uma instalação local de R.** A versão web executa o mesmo fluxo analítico da reprodução, da reconstrução dos dados às transformações, estimações, diagnósticos e sensibilidades, com uma apresentação mais guiada dos resultados.
 
 **A reprodução local utiliza o Pacote de Reprodutibilidade em R.** Nele estão o código, os dados necessários, a documentação e as instruções de execução.
 
@@ -140,161 +141,273 @@ Normalization: removed Google Docs export escaping only.
 
 **Depois das estimações principais, a análise aplica diagnósticos e sensibilidades previamente definidos.** Essas etapas avaliam as condições de interpretação dos resultados e sua estabilidade diante de alterações específicas de amostra e mensuração.
 
-<small>Os diagnósticos preliminares de estacionariedade, integração e dependência transversal foram empregados durante o desenvolvimento metodológico para definir e validar a estratégia de estimação. Eles permanecem como documentação de reconhecimento metodológico e não constituem etapas de execução do pacote final de reprodutibilidade.</small>
+<small>Os diagnósticos preliminares de estacionariedade, integração e dependência transversal foram empregados durante o desenvolvimento metodológico como instrumentos de reconhecimento das propriedades dos dados e de apoio às decisões que culminaram na arquitetura econométrica adotada. Esses procedimentos não constituem etapas necessárias à execução das estimações finais: as decisões por eles informadas foram posteriormente incorporadas à especificação e ao procedimento econométrico validados. Por essa razão, integram o registro técnico do desenvolvimento metodológico, enquanto o pacote de reprodutibilidade concentra-se na execução da arquitetura empírica já estabelecida e em seus diagnósticos, inferências e análises de sensibilidade correspondentes.</small>
+
+<small>A preparação das variáveis, a centralização local, a transformação dos coeficientes para o centro comum e a agregação são detalhadas na seção seguinte e implementadas diretamente nos módulos R distribuídos com a reprodução.</small>
 
 ---
 
 # 2. Das fontes aos dados estimáveis
 
-## Fontes utilizadas
+**A reprodução começa nas cópias preservadas das fontes efetivamente utilizadas no TCC.** Esses arquivos constituem o ponto de partida para reconstruir o painel da análise. Assim, a execução utiliza as mesmas versões das bases empregadas no trabalho, em vez de consultar novamente os provedores e eventualmente receber dados que tenham sido revisados depois da realização da pesquisa.
 
-**A reconstrução parte de cópias preservadas das fontes utilizadas no trabalho, e não de consultas novas aos provedores.**
-
-| Fonte | Conteúdo utilizado | Papel na análise |  
+| Provedor | Conteúdo utilizado | Papel na análise |  
 | :---- | :---- | :---- |  
-| World Development Indicators (WDI) | População, PIB real per capita, agricultura, indústria | Renda, composição produtiva e conversão per capita |  
-| Climate Watch | Emissões de GEE | Variável dependente |  
-| Our World in Data (OWID) | Intensidade energética, gás, petróleo, carvão e oferta total de energia | Bloco energético |
+| World Development Indicators (WDI) | PIB real per capita, intensidade energética, agricultura e indústria | Renda, energia e composição produtiva |  
+| World Development Indicators (WDI) | População | Conversão das emissões para valores per capita |  
+| Climate Watch | GEE incluindo e excluindo LULUCF | Variável dependente principal e alternativa |  
+| Our World in Data (OWID) | Gás, petróleo e carvão | Componentes da participação fóssil |  
+| Our World in Data (OWID) | Oferta total de energia | Denominador da participação fóssil |
 
-**A reprodução começa pelos arquivos preservados porque as bases públicas podem ser revisadas posteriormente.** Dessa forma, uma atualização do provedor não altera retroativamente o conjunto de dados utilizado no TCC.
-
-<small>O pacote inclui documentação de proveniência, identificação dos arquivos originais e as condições aplicáveis à sua redistribuição.</small>
+<small>A documentação do pacote identifica os arquivos preservados, sua proveniência, integridade e condições de redistribuição.</small>
 
 ---
 
-## Reconstrução e painel analítico
+## Da fonte preservada aos extratos normalizados
 
-**Os arquivos preservados são convertidos em cinco extratos normalizados, que depois são combinados em um painel país-ano.** A reconstrução padroniza nomes de países, anos, unidades e identificadores antes da combinação das fontes.
+**As diferentes bases são reduzidas ao mesmo recorte de países, anos e séries antes de serem combinadas.** O código seleciona Argentina, Bolívia, Brasil, Paraguai e Uruguai no período de 1990 a 2023 e converte as fontes para uma estrutura comum de observações país-ano.
 
-**O painel principal contém 170 observações, correspondentes aos cinco países entre 1990 e 2023.** A estrutura final é balanceada para o recorte principal da análise.
+**A reconstrução produz cinco extratos normalizados.** Eles correspondem a economia e composição produtiva, população, emissões, componentes fósseis e oferta total de energia.
+
+**A preparação preserva as observações disponíveis nas fontes, sem preencher lacunas com valores estimados ou criar observações intermediárias.** Em outras palavras, o código não interpola valores entre dois anos nem substitui uma eventual ausência de dado por uma estimativa. Nas planilhas do WDI, por exemplo, a estrutura original em formato largo é convertida para país-ano sem alterar os valores selecionados.
+
+<small>Antes da extração, o código verifica a identidade dos arquivos preservados e a presença das séries, países e anos esperados.</small>
+
+---
+
+## Construção do painel
+
+**Os cinco extratos são combinados pela chave `iso3 + year`, formando um painel balanceado com 170 observações.** O resultado contém 34 anos para cada um dos cinco países e mantém uma única observação para cada combinação país-ano.
 
 **Algumas séries utilizadas na análise são construídas durante essa etapa.** As emissões totais do Climate Watch são convertidas para toneladas de CO₂ equivalente per capita utilizando a população do WDI. A participação fóssil é calculada a partir da soma das séries de consumo de gás, petróleo e carvão em relação à oferta total de energia.
 
-**O PIB real per capita é transformado em logaritmo e centralizado para as estimações.** A intensidade energética também é utilizada em logaritmo. As participações da agricultura, da indústria e dos combustíveis fósseis são mantidas em pontos percentuais.
-
-<small>O painel reconstruído é conferido por identidades de linhas, chaves país-ano, cobertura temporal, presença de valores ausentes e consistência das variáveis derivadas antes de seguir para as estimações.</small>
-
-**[VISUAL V02 — fontes preservadas → extratos normalizados → painel reconstruído → transformações → centralização local → estimação por país → reexpressão no centro comum → média do grupo]**
+**O painel reconstruído é comparado com o painel analítico certificado antes da continuidade da reprodução.** A reconstrução parte sempre das fontes preservadas e refaz o processo de preparação dos dados. O painel certificado é utilizado somente como referência para verificar se esse processo chegou novamente aos mesmos dados empregados na análise original; ele não substitui as fontes nem funciona como um atalho para evitar sua reconstrução.
 
 ---
 
-## Estrutura dos arquivos de dados
+## Transformações usadas nas estimações
 
-**Os arquivos de dados são separados entre fontes preservadas, extratos normalizados e dados processados.**
+**As variáveis são transformadas no código antes de serem encaminhadas às especificações econométricas.** As emissões de GEE per capita, o PIB real per capita e a intensidade energética entram em logaritmo. Participação fóssil, agricultura e indústria permanecem expressas em pontos percentuais.
 
-| Pasta | Conteúdo |  
+| Variável analítica | Construção |  
 | :---- | :---- |  
-| `dados/fontes_originais/` | Cópias preservadas das fontes utilizadas |  
-| `dados/extratos_csv/` | Cinco extratos normalizados |  
-| `dados/processados/` | Painel e objetos derivados utilizados na reprodução |
+| Emissões — principal | log de GEE per capita excluindo LULUCF |  
+| Emissões — sensibilidade | log de GEE per capita incluindo LULUCF |  
+| Renda | log do PIB real per capita |  
+| Intensidade energética | log da intensidade energética |  
+| Participação fóssil | percentual da oferta total de energia |  
+| Agricultura | participação percentual no PIB |  
+| Indústria | participação percentual no PIB |
 
-**Essa separação permite distinguir o material obtido dos provedores das transformações realizadas pelo projeto.** Os extratos funcionam como uma etapa intermediária auditável entre as fontes preservadas e o painel analítico.
+**O termo quadrático da CAK é construído a partir da renda em logaritmo, após sua centralização.** Por isso, um eventual campo contendo o PIB per capita elevado ao quadrado em nível não corresponde ao regressor quadrático utilizado nas estimações.
+
+---
+
+## Centralização por país e centro comum
+
+**A estimação utiliza uma centralização local temporária da renda e posteriormente reexpressa os resultados em uma referência comum.** Para cada país, o logaritmo do PIB per capita é inicialmente expresso em relação à média daquele próprio país, e a estimação FM-OLS é realizada nessa referência local. Essa reparametrização é reversível e não altera a relação econômica estimada.
+
+**Os coeficientes associados à renda são então transformados para um centro comum calculado a partir do painel completo.** Essa reexpressão coloca os resultados dos cinco países em uma mesma referência de renda antes da comparação e da formação da média do grupo. O centro comum permanece fixo nas sensibilidades predefinidas, mantendo a mesma referência entre as estimações.
+
+**[VISUAL V02 — fontes preservadas → extratos normalizados → painel reconstruído → transformações → centralização local → estimação por país → reexpressão no centro comum → média do grupo]**
+
+<small>O centro comum corresponde à média do logaritmo do PIB real per capita nas 170 observações do painel. Seu valor é calculado e verificado automaticamente durante a execução.</small>
+
+---
+
+## Integridade da reconstrução
+
+**A preparação dos dados inclui verificações automáticas antes que o painel seja utilizado nas estimações.** O código verifica, entre outros pontos, a identidade dos arquivos-fonte, o número esperado de observações, os países e anos presentes, a unicidade das chaves país-ano e a validade das variáveis necessárias.
+
+**As séries derivadas também são verificadas contra suas próprias fórmulas de construção.** Isso inclui as emissões per capita, a participação fóssil e outras variáveis produzidas durante a reconstrução.
+
+**A etapa termina com a comparação entre o painel reconstruído e a referência certificada.** Somente depois dessas verificações o painel segue para as transformações e estimações executadas pelos módulos seguintes.
+
+<small>As verificações de integridade utilizam hashes dos arquivos, identidades algébricas e tolerâncias numéricas definidas no próprio pacote.</small>
 
 ---
 
 # 3. Como a reprodução funciona
 
-## Duas formas de execução
+**A análise pode ser reproduzida no navegador ou localmente em R.** As duas formas executam o mesmo fluxo analítico, da reconstrução dos dados às estimações, diagnósticos e sensibilidades, mas servem a usos diferentes: a versão web prioriza a execução guiada e a inspeção dos resultados na interface, enquanto a execução local dá acesso direto ao código, aos arquivos gerados e ao ambiente de execução.
 
-**A análise pode ser reproduzida no navegador ou localmente em R.** As duas formas seguem o mesmo desenho econométrico geral, mas servem a usos diferentes: a versão web prioriza o acompanhamento das etapas e dos resultados principais, enquanto a execução local dá acesso direto ao código, aos arquivos gerados e ao ambiente de execução.
+| Forma de execução | Execução | Apresentação |  
+| :---- | :---- | :---- |  
+| Navegador | Fluxo analítico da reprodução | Seleção guiada dos principais resultados, diagnósticos e etapas |  
+| Local em R | Fluxo analítico da reprodução | Acesso direto ao código, às etapas e ao conjunto de arquivos produzidos |
 
-**A execução no navegador é a rota mais simples para acompanhar o núcleo da reprodução.** Ela utiliza R diretamente no navegador e não exige instalação local para as etapas disponibilizadas na versão web.
+<small>A execução local também permite maior aproximação ao ambiente utilizado na reprodução de referência, especialmente quando são observadas as versões de R, pacotes e parâmetros documentados no Pacote de Reprodutibilidade em R.</small>
 
-**A execução local é a rota completa.** Ela utiliza o Pacote de Reprodutibilidade em R e produz todos os arquivos previstos pela implementação pública, incluindo diagnósticos, sensibilidades, tabelas, figuras, logs e registros do ambiente computacional.
+---
 
-<small>A versão web não substitui a distribuição dos arquivos de reprodução. Ela oferece uma forma adicional de executar e inspecionar partes centrais da análise.</small>
+## Execução no navegador
 
-**[VISUAL V03 — rotas distintas: navegador (Quarto/webR → execução guiada) / pacote local (`executar_analise.R` → módulos R/01–07 → resultados completos), com referência separada]**
+**A versão web executa a análise em R diretamente no navegador.** Isso permite acompanhar a preparação dos dados, as estimações e as etapas posteriores sem configurar previamente uma instalação local de R.
+
+**A versão web destaca apenas o que é mais útil para acompanhar a reprodução.** As especificações E1–E4, seus principais coeficientes e os diagnósticos centrais aparecem com maior destaque; resultados auxiliares continuam disponíveis, mas não ocupam o fluxo principal do guia. Assim, a reprodução permanece inspecionável sem virar uma sequência extensa de tabelas e saídas técnicas.
+
+**A diferença está na apresentação, não em uma análise econometricamente reduzida.** O procedimento continua sendo tratado como um processo único; a versão web apenas organiza o que recebe maior ou menor destaque.
+
+<small>A execução no navegador utiliza R por meio de webR. A compatibilidade de E1–E4 já foi verificada numericamente contra os resultados de referência; o alcance final do fluxo executável na versão publicada ainda depende da verificação direta da implementação web.</small>
+
+---
+
+## Execução local do pacote
+
+**A reprodução local utiliza diretamente os arquivos do Pacote de Reprodutibilidade em R e oferece acesso integral ao código e às saídas produzidas.** O ponto de entrada é o arquivo `executar_analise.R`, localizado na raiz do pacote, que coordena os módulos responsáveis pela preparação dos dados, estimações, diagnósticos, sensibilidades, tabelas e figuras.
+
+**Em RStudio, a forma mais simples é abrir a pasta do pacote e executar `executar_analise.R`.** A partir daí, é possível acompanhar o código, inspecionar os objetos e arquivos gerados e abrir os módulos individuais quando uma etapa exigir mais detalhe.
+
+**A mesma reprodução também pode ser iniciada pela linha de comando.** A partir da pasta principal do pacote:
+
+```bash  
+Rscript --vanilla executar_analise.R  
+```
+
+**As dependências necessárias devem estar disponíveis no ambiente antes da execução.** O pacote não instala automaticamente as bibliotecas utilizadas; os requisitos e as versões de referência são documentados junto aos arquivos distribuídos.
+
+<small>Para maior proximidade com a implementação publicada, recomenda-se utilizar as versões de R e dos pacotes registradas na documentação da versão de referência. Outras versões compatíveis podem introduzir pequenas diferenças numéricas ou de comportamento entre ambientes.</small>
 
 ---
 
 ## Organização do código
 
-**O script principal encadeia as etapas necessárias para transformar os arquivos distribuídos nos resultados da reprodução.** O fluxo começa com a configuração do ambiente e a verificação das entradas, passa pela reconstrução e preparação dos dados e segue para estimações, diagnósticos e sensibilidades.
+**O código é dividido em sete módulos coordenados pelo script principal.** A separação mantém cada etapa fácil de localizar sem concentrar toda a análise em um único arquivo.
 
-| Ordem | Arquivo | Função principal |  
-| :---- | :---- | :---- |  
-| 1 | `R/01_configuracao.R` | Configuração, constantes e caminhos |  
-| 2 | `R/02_reconstrucao_fontes.R` | Reconstrução dos extratos a partir das fontes preservadas |  
-| 3 | `R/03_preparacao_painel.R` | Construção e validação do painel analítico |  
-| 4 | `R/04_estimacao_principal.R` | Estimação das especificações E1–E4 |  
-| 5 | `R/05_sensibilidades.R` | Exercícios de sensibilidade definidos no desenho empírico |  
-| 6 | `R/06_tabelas.R` | Tabelas e arquivos tabulares |  
-| 7 | `R/07_figuras.R` | Figuras e dados de apoio aos gráficos |
+| Arquivo | Função |  
+| :---- | :---- |  
+| `executar_analise.R` | Coordena a reprodução completa |  
+| `R/01_configuracao.R` | Define parâmetros, caminhos e funções auxiliares |  
+| `R/02_preparacao_dados.R` | Reconstrói as fontes, forma o painel e prepara as variáveis |  
+| `R/03_diagnosticos.R` | Executa os diagnósticos definidos para a análise |  
+| `R/04_estimacao_principal.R` | Estima as especificações E1–E4 |  
+| `R/05_sensibilidades.R` | Executa as análises de sensibilidade |  
+| `R/06_tabelas.R` | Produz as tabelas e saídas tabulares |  
+| `R/07_figuras.R` | Produz as figuras da reprodução |
 
-**Cada etapa também produz informações úteis para verificar a reprodução.** Isso inclui logs, manifestos, resumos tabulares e arquivos intermediários destinados à auditoria do processo.
+**[VISUAL V03 — duas rotas para o mesmo fluxo analítico: navegador (Quarto/webR → execução guiada e seleção de saídas) / pacote local (`executar_analise.R` → módulos R/01–07 → inspeção direta dos arquivos e saídas), com referência separada]**
+
+<small>A numeração organiza os arquivos para leitura e manutenção. A sequência efetiva das operações é controlada pelo script `executar_analise.R`.</small>
 
 ---
 
-## Execução local
+## Da execução aos resultados
 
-**A reprodução local começa em `executar_analise.R`.** O script verifica o ambiente e os arquivos de entrada, executa os módulos em sequência e grava os resultados nas pastas correspondentes.
+**O script principal encadeia as etapas necessárias para transformar os arquivos distribuídos nos resultados da reprodução.** O fluxo começa com a configuração do ambiente e a verificação das entradas, passa pela reconstrução e preparação dos dados e segue para estimações, diagnósticos e sensibilidades.
 
-**O ambiente computacional da execução também é registrado.** A execução atual gera `resultados/logs/ambiente_execucao.csv` e, quando existe uma referência computacional válida, produz também `resultados/logs/comparacao_ambiente.csv`.
+**Ao final, os resultados da análise são gravados em arquivos que podem ser consultados fora do R.** Isso inclui tabelas, figuras, arquivos consolidados e outras saídas usadas para conferir os resultados e registrar a execução.
 
-<small>O registro do ambiente não exige identidade absoluta entre máquinas. Diferenças de sistema, arquitetura ou versão são tratadas como contexto diagnóstico e devem ser avaliadas em conjunto com a equivalência dos resultados.</small>
+**As verificações incorporadas ao pacote interrompem a execução quando uma condição necessária não é atendida.** Assim, problemas como arquivos inesperados, estruturas incompatíveis ou falhas nas verificações de integridade são identificados antes que a sequência restante seja executada.
+
+<small>Os arquivos de entrada permanecem separados das saídas geradas, de modo que os materiais necessários para iniciar a reprodução não se confundam com os arquivos produzidos durante a execução.</small>
 
 ---
 
 # 4. O que a execução produz
 
-## Resultados principais
+**A execução produz as estimações, diagnósticos, sensibilidades, tabelas, figuras e registros necessários para conferir a reprodução.** O guia apresenta primeiro E1–E4, depois os resultados que qualificam sua interpretação e, por fim, a síntese das hipóteses e das trajetórias das emissões.
+
+<small>O conjunto completo de arquivos permanece disponível no Pacote de Reprodutibilidade em R, mesmo quando determinado resultado não é exibido diretamente nesta apresentação.</small>
+
+---
+
+## Resultados principais E1–E4
 
 **A tabela principal coloca E1–E4 lado a lado.** Para cada termo relevante, ela apresenta a estimativa do coeficiente e os elementos usados em sua avaliação estatística, permitindo observar o que muda quando os blocos de energia e composição produtiva são acrescentados ao núcleo de renda.
 
-**A interpretação das hipóteses é feita a partir do conjunto apropriado de resultados, e não apenas do sinal de um coeficiente isolado.** H1 exige a combinação da forma quadrática com o teste de U invertido e com a localização do ponto de reversão; H3 depende do teste conjunto das variáveis de composição produtiva.
+**[TABELA — resultados principais E1–E4, gerada a partir da execução atual]**
 
-**Os resultados principais não oferecem suporte a uma CAK em U invertido.** A hipótese H1 não é sustentada nas especificações principais.
-
-**A intensidade energética não apresenta associação positiva estatisticamente sustentada nas especificações principais.** H2a não recebe suporte.
-
-**A participação fóssil apresenta associação positiva nas especificações principais que incluem o bloco energético.** H2b recebe suporte em E2 e permanece sustentada em E4.
-
-**A composição produtiva apresenta associação conjunta estatisticamente sustentada nas especificações que incluem agricultura e indústria.** H3 recebe suporte em E3 e permanece sustentada em E4.
-
-<small>As estimativas de E2–E4 são interpretadas com a qualificação inferencial associada à extensão operacional da rota de covariância para uma configuração com regressores de propriedades de integração distintas.</small>
+<small>A tabela exibida é construída a partir dos resultados gerados pela execução, com `inferencia_principal.csv` como fonte principal. Os arquivos completos de coeficientes permanecem disponíveis para inspeção mais detalhada.</small>
 
 ---
 
-## Diagnósticos
+## Forma estimada da relação renda–emissões
+
+**No intervalo de renda observado na amostra, aumentos de renda permanecem associados a aumentos de emissões.** A Figura 1 apresenta a elasticidade marginal associada à renda, mostrando como essa relação varia ao longo dos níveis de PIB per capita observados nos cinco países.
+
+Para que a forma de U invertido prevista pela hipótese da Curva Ambiental de Kuznets aparecesse dentro da amostra, essa elasticidade deveria atingir zero e tornar-se negativa em algum ponto. **A inversão não ocorre dentro da faixa de renda observada**, de modo que E1 não fornece suporte à H1 nessa faixa.
+
+**[FIGURA 1A — elasticidade marginal da renda: resultado de referência]**
+
+**[FIGURA 1B — elasticidade marginal da renda: resultado desta execução]**
+
+<small>As duas figuras representam a mesma saída substantiva. A primeira acompanha a reprodução de referência; a segunda é gerada pela execução atual e permite uma comparação visual direta entre as duas reproduções.</small>
+
+---
+
+## Diagnósticos pós-estimação
 
 **Os diagnósticos qualificam a interpretação das estimações sem constituir novas especificações ou hipóteses.** A reprodução verifica padrões dos resíduos, incluindo autocorrelação, heterocedasticidade, tendência e dependência entre os países, e organiza esses resultados de forma compacta para identificar onde a interpretação exige maior cautela.
 
-**A dependência transversal dos resíduos difere entre as especificações.** Ela é detectada em E1–E3 no diagnóstico principal, mas não em E4.
+**[QUADRO — síntese dos diagnósticos residuais e de dependência transversal, gerado a partir da execução atual]**
 
-**Os testes complementares de cointegração para E1 não fornecem uma conclusão convergente.** Por isso, a relação polinomial da especificação de renda não é tratada como uma relação de cointegração confirmada.
+**A interpretação de longo prazo de E1 recebe uma verificação complementar específica.** Os testes adicionais de cointegração não fornecem evidência suficiente para confirmar essa propriedade de E1. Esse resultado limita uma interpretação forte de longo prazo da especificação, sem alterar o fato de que ela permanece informativa para caracterizar a relação estimada na amostra.
+
+<small>Os resultados apresentados nesta seção são lidos das saídas produzidas pela própria execução; os testes não são refeitos separadamente pelo guia.</small>
 
 ---
 
-## Sensibilidades
+## Sensibilidade a quebras predefinidas
 
-**As análises de sensibilidade verificam se as conclusões dependem de episódios específicos ou da fronteira de contabilização das emissões.**
+**As exclusões predefinidas de períodos da amostra mostram que algumas relações são mais estáveis do que outras.** Participação fóssil e indústria apresentam maior estabilidade direcional, enquanto intensidade energética, termo quadrático da renda e agricultura mostram maior sensibilidade em exercícios selecionados.
 
-**A sensibilidade de amostra exclui períodos previamente identificados para Bolívia, Brasil e Uruguai.** Os resultados são utilizados como comparação de estabilidade dos sinais e magnitudes e não substituem as estimações principais.
+Essas comparações ajudam a identificar resultados mais dependentes de períodos específicos da amostra. **Elas são tratadas como análises de sensibilidade das estimativas pontuais**, e não como uma nova rodada de inferência formal para cada amostra reduzida.
 
-**A sensibilidade de mensuração repete a análise utilizando emissões per capita incluindo LULUCF.** Essa alteração muda a fronteira contabilizada da variável dependente.
+**[QUADRO — sensibilidade às exclusões predefinidas, gerado a partir da execução atual]**
+
+---
+
+## Sensibilidade à inclusão das emissões de uso da terra e florestas
+
+**Parte das conclusões depende da fronteira utilizada para contabilizar as emissões de gases de efeito estufa.** O resultado principal utiliza emissões per capita excluindo uso da terra, mudança no uso da terra e silvicultura (LULUCF, do inglês *Land Use, Land-Use Change and Forestry*). A reprodução também repete a análise utilizando a medida alternativa que inclui esse componente.
 
 **Com a inclusão de LULUCF, H1 e H2a continuam sem suporte, enquanto o suporte observado para H2b e H3 deixa de se manter.** A sensibilidade mostra que as conclusões associadas à participação fóssil e à composição produtiva dependem, em parte, da fronteira de contabilização das emissões adotada.
 
 ---
 
-## Arquivos gerados
+## Síntese das hipóteses
 
-**A execução produz saídas legíveis e arquivos destinados à verificação da reprodução.**
+**A evidência principal não sustenta H1 nem H2a; H2b e H3 recebem suporte no resultado principal, com uma qualificação importante associada a LULUCF.**
 
-| Tipo | Exemplos |  
+| Hipótese | Resultado principal | Qualificação |  
+| :---- | :---- | :---- |  
+| H1 | Não sustentada | A forma de U invertido não aparece na faixa de renda observada; a cointegração de E1 também não é confirmada pela verificação complementar |  
+| H2a | Não sustentada | O resultado permanece sem suporte na sensibilidade com LULUCF |  
+| H2b | Sustentada | O suporte não se mantém quando LULUCF é incluído |  
+| H3 | Sustentada | O suporte não se mantém quando LULUCF é incluído |
+
+**E4 funciona como verificação conjunta das relações examinadas nas especificações anteriores, e não como uma hipótese adicional.** Sua leitura permite observar como os coeficientes se comportam quando os blocos energético e de composição produtiva são incluídos simultaneamente.
+
+<small>A síntese final é produzida a partir das estimações, diagnósticos e sensibilidades anteriores, evitando interpretar isoladamente apenas um coeficiente ou uma especificação.</small>
+
+---
+
+## Trajetórias das emissões
+
+**As trajetórias das emissões ajudam a visualizar tanto a heterogeneidade entre os cinco países quanto o efeito da fronteira de contabilização adotada.** As Figuras 2 e 3 apresentam a evolução das emissões per capita entre 1990 e 2023, respectivamente excluindo e incluindo LULUCF.
+
+**[FIGURA 2 — emissões de GEE per capita excluindo LULUCF, gerada nesta execução]**
+
+**[FIGURA 3 — emissões de GEE per capita incluindo LULUCF, gerada nesta execução]**
+
+Essas figuras têm função descritiva e contextual. **As diferenças visuais entre países e entre as duas medidas de emissões complementam, mas não substituem, os resultados das estimações e das análises de sensibilidade.**
+
+---
+
+## Arquivos produzidos pela reprodução
+
+**A execução gera mais arquivos do que os exibidos diretamente no guia.** O diretório de resultados reúne tabelas reutilizáveis, figuras, resultados detalhados dos diagnósticos e sensibilidades, registros do ambiente e informações sobre a própria execução.
+
+| Grupo | Conteúdo |  
 | :---- | :---- |  
-| Resultados tabulares | `inferencia_principal.csv`, `tcc_resultados-empiricos.xlsx` |  
-| Figuras | SVG, PNG e dados de apoio |  
-| Logs | ambiente, versões de pacotes e `sessionInfo()` |  
-| Manifestos | entradas e saídas da reprodução |  
-| Referência analítica | arquivos congelados usados na comparação |
+| Estimações | Coeficientes e resultados das especificações E1–E4 |  
+| Diagnósticos | Resultados por país e sínteses das verificações aplicadas |  
+| Sensibilidades | Quebras predefinidas e alternativa incluindo LULUCF |  
+| Tabelas | Arquivos tabulares utilizados na apresentação e na inspeção |  
+| Figuras | Figuras substantivas e seus formatos distribuídos |  
+| Registros | Ambiente R, versões de pacotes e informações da execução |
 
-**Os arquivos tabulares permitem conferir os principais resultados sem depender da interface do site.** O arquivo `inferencia_principal.csv` concentra a inferência principal em formato simples, enquanto `tcc_resultados-empiricos.xlsx` organiza as saídas empíricas em uma planilha de consulta.
-
-**As figuras são acompanhadas por arquivos de apoio quando isso melhora a verificabilidade.** Dessa forma, o gráfico pode ser conferido tanto visualmente quanto pelos dados que o produziram.
-
-<small>Os nomes e caminhos finais dos arquivos distribuídos são definidos pelo pacote publicável e mantidos estáveis na publicação.</small>
+**O inventário completo permite sair da síntese do guia e conferir diretamente o que foi produzido pelo código.** Quando um diagnóstico, coeficiente ou exercício de sensibilidade exigir mais detalhe, a saída correspondente pode ser consultada sem que todo esse material precise aparecer no corpo principal.
 
 ---
 
@@ -434,3 +547,4 @@ A Figura 1 é um exemplo desse uso: a versão congelada a partir da execução d
 ## Encerramento
 
 **O guia conecta a descrição da pesquisa aos arquivos usados para reproduzir e conferir sua análise empírica.** A versão web permite acompanhar a execução e os resultados principais; o pacote local mantém o código, os dados, as saídas e a documentação completa para uma inspeção mais detalhada.
+
