@@ -1,47 +1,137 @@
 ---
 title: "Execução no navegador"
+format: live-html
+engine: knitr
+
+resources:
+  - data/tcc_data_panel-canonical-mercosur_1990-2023_2026-10-21_v01.csv
+
+webr:
+  packages:
+    - cointReg
+  resources:
+    - data/tcc_data_panel-canonical-mercosur_1990-2023_2026-10-21_v01.csv
 ---
 
-**A execução no navegador oferece uma rota guiada para reproduzir partes centrais da análise diretamente em R, sem exigir instalação local.** A implementação utilizará webR/Quarto Live e permanecerá vinculada aos mesmos dados e especificações distribuídos no pacote de reprodução.
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+**A execução no navegador oferece uma rota guiada para reproduzir partes centrais da análise diretamente em R, sem exigir instalação local.** Esta montagem integra primeiro o mesmo bloco ARG–E1 que fechou o teste de viabilidade Quarto Live/webR; a expansão para a interface E1–E4 virá sobre essa base já reconciliada.
 
 ::: {.callout-note title="Escopo desta montagem"}
-A viabilidade numérica de E1–E4 em webR já foi demonstrada. A integração abaixo ainda será validada contra a referência canônica estabelecida pela execução local do autor antes da publicação final.
+O código abaixo é uma migração do teste certificado já executado com o painel canônico e `cointReg`. A validação pública final continuará dependente da referência canônica estabelecida pela execução local do autor.
 :::
 
-## Como a execução será organizada
+## 1. Verificar o ambiente no navegador
 
-<div class="execution-stage">
-<strong>1. Carregar e conferir os dados analíticos</strong><br>
-O navegador carrega os arquivos necessários, verifica a estrutura esperada do painel e prepara as variáveis utilizadas pelas especificações.
-</div>
+O primeiro bloco confirma que o R do navegador iniciou e que `cointReg` está disponível.
 
-<div class="execution-stage">
-<strong>2. Reproduzir E1–E4</strong><br>
-As quatro especificações são executadas com o mesmo desenho econométrico utilizado pela implementação pública em R.
-</div>
+```{webr}
+R.version.string
+packageVersion("cointReg")
+library(cointReg)
 
-<div class="execution-stage">
-<strong>3. Inspecionar os resultados principais</strong><br>
-A interface apresenta coeficientes e verificações selecionadas para que a execução corrente possa ser comparada ao resultado esperado.
-</div>
+exists(
+  "cointRegFM",
+  where = asNamespace("cointReg"),
+  inherits = FALSE
+)
+```
 
-<div class="execution-stage">
-<strong>4. Comparar com a referência</strong><br>
-Depois que a execução canônica do autor for congelada, a versão web será validada e comparada numericamente com essa referência.
-</div>
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
-## Área executável
+## 2. Reproduzir a especificação certificada ARG–E1
 
-<div class="execution-placeholder">
-<strong>Integração webR em andamento</strong>
+**Este bloco reconstrói a estimação E1 para a Argentina a partir do painel canônico distribuído, aplica a centralização local e reexpressa os coeficientes no centro comum do painel.** O resultado é então comparado ao benchmark usado no teste de viabilidade.
 
-Esta posição já faz parte do layout final. O próximo passo técnico é incorporar os blocos executáveis validados para E1–E4 e, apenas depois, ampliar o escopo do navegador se os testes de integração justificarem isso.
+```{webr}
+library(cointReg)
 
-<span class="status-line">A reprodução local completa permanece disponível separadamente no Pacote de Reprodutibilidade em R.</span>
-</div>
+# Painel canônico utilizado no teste certificado
+dat <- read.csv(
+  "data/tcc_data_panel-canonical-mercosur_1990-2023_2026-10-21_v01.csv",
+  stringsAsFactors = FALSE,
+  check.names = FALSE
+)
 
-## O que permanece na reprodução local
+# Verificações estruturais
+stopifnot(nrow(dat) == 170)
+stopifnot(setequal(unique(dat$iso3), c("ARG", "BOL", "BRA", "PRY", "URY")))
 
-**O navegador não precisa reproduzir toda a infraestrutura do pacote para ser útil.** Diagnósticos extensos, sensibilidades, geração integral de arquivos, logs e registros do ambiente computacional permanecem disponíveis pela rota local completa. O escopo final da execução web será definido pelo que puder ser reproduzido de forma estável e verificável.
+# Transformações da especificação
+dat$y_excl <- log(dat$ghgpc_tco2e_excl_lulucf)
+dat$ln_gdp <- log(dat$gdp_pc_const2015_usd)
+
+common_center <- mean(dat$ln_gdp)
+
+arg <- dat[dat$iso3 == "ARG", ]
+arg <- arg[order(arg$year), ]
+
+stopifnot(nrow(arg) == 34)
+stopifnot(identical(as.integer(arg$year), 1990:2023))
+
+# Centralização local do país
+local_center <- mean(arg$ln_gdp)
+z <- arg$ln_gdp - local_center
+
+X <- cbind(
+  income  = z,
+  income2 = z^2
+)
+
+D <- matrix(1, nrow = nrow(arg), ncol = 1)
+colnames(D) <- "intercept"
+
+fit <- cointReg::cointRegFM(
+  x = X,
+  y = as.numeric(arg$y_excl),
+  deter = D,
+  kernel = "ba",
+  bandwidth = 3L,
+  demeaning = FALSE,
+  check = TRUE
+)
+
+theta_local <- as.numeric(fit$theta)
+names(theta_local) <- c("intercept", "income", "income2")
+
+# Reexpressão do centro local da Argentina para o centro comum do painel
+delta <- common_center - local_center
+
+J <- matrix(
+  c(
+    1, delta, delta^2,
+    0, 1,     2 * delta,
+    0, 0,     1
+  ),
+  nrow = 3,
+  byrow = TRUE
+)
+
+theta_common <- drop(J %*% theta_local)
+names(theta_common) <- c("intercept", "income", "income2")
+
+# Benchmark certificado anteriormente
+expected <- c(
+  intercept = 2.00937743,
+  income    = 0.19851055,
+  income2   = 0.03235887
+)
+
+diff <- theta_common - expected
+
+theta_common
+expected
+diff
+
+cat(
+  "Maximum absolute coefficient difference:",
+  format(max(abs(diff)), scientific = TRUE),
+  "\n"
+)
+```
+
+## 3. Próxima expansão
+
+**O próximo passo é substituir este teste de uma especificação pela interface guiada E1–E4 já demonstrada como numericamente compatível em webR.** A migração será feita sobre o mesmo painel e a mesma configuração de `cointReg`, preservando a reprodução local como rota completa para diagnósticos, sensibilidades e geração integral de arquivos.
 
 [Ver arquivos e reprodução local](arquivos.qmd)
