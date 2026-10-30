@@ -4,6 +4,10 @@ project:
 
 website:
   title: "Determinantes Econômicas da Emissão de GEE"
+  page-navigation: true
+  search:
+    location: navbar
+    type: overlay
   navbar:
     left:
       - href: index.qmd
@@ -14,6 +18,13 @@ website:
         text: Execução no navegador
       - href: arquivos.qmd
         text: Arquivos
+    tools:
+      - icon: github
+        href: https://github.com/Ambiente-de-teste-MM/tcc-reprodutibilidade
+        aria-label: Repositório público no GitHub
+  page-footer:
+    left: "TCC — Economia | Reprodutibilidade da análise empírica"
+    right: "Guia, execução web e pacote local"
 
 format:
   html:
