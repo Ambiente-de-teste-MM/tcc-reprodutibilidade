@@ -1,0 +1,20 @@
+---
+title: "Reprodutibilidade da análise empírica"
+page-layout: full
+---
+
+# Determinantes Econômicas da Emissão de Gases de Efeito Estufa
+
+**Este site acompanha o TCC e oferece uma rota guiada para compreender, inspecionar e reproduzir sua análise empírica.**
+
+A versão web prioriza a leitura e a execução das partes centrais. O Pacote de Reprodutibilidade em R permanece como a rota completa para execução local, inspeção de código, dados, diagnósticos, sensibilidades e arquivos gerados.
+
+::: {.callout-note title="Pilot 01"}
+Esta é a primeira montagem integrada do produto de publicação. Alguns visuais, o Guia completo e a referência analítica canônica ainda serão promovidos após as respectivas validações.
+:::
+
+## Acesso rápido
+
+- [Abrir o Guia](guia.qmd)
+- [Execução no navegador](execucao.qmd)
+- [Arquivos e reprodução local](arquivos.qmd)

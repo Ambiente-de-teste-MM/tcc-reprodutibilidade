@@ -1,0 +1,9 @@
+version: 1
+visuals:
+  V01: {status: explicit-guide-marker}
+  V02: {status: explicit-guide-marker}
+  V03: {status: explicit-guide-marker}
+  V04: {status: planned}
+  V05: {status: planned-implementation-detail}
+  V06: {status: planned}
+  V07: {status: optional-disabled}

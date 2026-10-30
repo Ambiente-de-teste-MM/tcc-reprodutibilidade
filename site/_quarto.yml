@@ -1,0 +1,23 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "Determinantes Econômicas da Emissão de GEE"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Início
+      - href: guia.qmd
+        text: Guia
+      - href: execucao.qmd
+        text: Execução no navegador
+      - href: arquivos.qmd
+        text: Arquivos
+
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    smooth-scroll: true
+    css: assets/css/site.css

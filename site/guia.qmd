@@ -1,0 +1,5 @@
+---
+title: "Guia de Execução e Reprodutibilidade em R"
+---
+
+{{< include conteudo/guia-site.md >}}

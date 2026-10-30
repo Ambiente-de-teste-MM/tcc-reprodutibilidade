@@ -1,0 +1,10 @@
+.visual-placeholder {
+  border: 1px dashed #777;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+  text-align: center;
+  border-radius: .35rem;
+}
+.visual-slot { margin: 1.5rem 0; }
+.visual-svg { width: 100%; height: auto; }
+.visual-caption { font-size: .9rem; margin-top: .5rem; }

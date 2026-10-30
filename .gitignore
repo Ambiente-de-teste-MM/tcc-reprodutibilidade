@@ -1,0 +1,20 @@
+# Sistema / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.Rproj.user/
+.Rhistory
+.RData
+
+# Builds
+site/_site/
+_site/
+build/
+*.log
+
+# Resultados correntes não congelados
+reproducibilidade/resultados/*
+!reproducibilidade/resultados/.gitkeep
+
+# Conteúdo gerado do Guia
+site/conteudo/guia-site.md

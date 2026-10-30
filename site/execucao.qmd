@@ -1,0 +1,14 @@
+---
+title: "Execução no navegador"
+---
+
+**A execução no navegador utilizará webR para reproduzir as etapas selecionadas da análise sem exigir instalação local de R.**
+
+::: {.callout-warning title="Pilot 01 — integração em andamento"}
+O núcleo E1–E4 já teve sua viabilidade testada anteriormente. Nesta montagem, a posição e a narrativa da execução estão definidas; a integração completa dos blocos executáveis será inserida e validada contra a referência canônica do autor antes da publicação final.
+:::
+
+## Área executável
+
+> **PLACEHOLDER WEBR — PILOT 01**  
+> Este bloco será substituído pela implementação Quarto Live/webR validada.

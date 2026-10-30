@@ -1,0 +1,15 @@
+---
+title: "Arquivos e reprodução local"
+---
+
+**A reprodução local continua sendo a rota completa da análise.**
+
+O repositório público disponibilizará o código, os dados redistribuíveis, a documentação e a referência analítica aprovada. Uma versão compactada do Pacote de Reprodutibilidade em R será associada às versões publicadas do projeto.
+
+## Estrutura esperada
+
+- `reproducibilidade/executar_analise.R`
+- `reproducibilidade/R/`
+- `reproducibilidade/dados/`
+- `reproducibilidade/documentacao/`
+- `reproducibilidade/referencia/`
