@@ -5,20 +5,22 @@ engine: knitr
 
 resources:
   - data/tcc_data_panel-canonical-mercosur_1990-2023_2026-10-21_v01.csv
+  - recursos/execucao-web/e1-e4-core.R
 
 webr:
   packages:
     - cointReg
   resources:
     - data/tcc_data_panel-canonical-mercosur_1990-2023_2026-10-21_v01.csv
+    - recursos/execucao-web/e1-e4-core.R
 ---
 
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
-**A execução no navegador oferece uma rota guiada para reproduzir partes centrais da análise diretamente em R, sem exigir instalação local.** Esta montagem integra primeiro o mesmo bloco ARG–E1 que fechou o teste de viabilidade Quarto Live/webR; a expansão para a interface E1–E4 virá sobre essa base já reconciliada.
+**A execução no navegador oferece uma rota guiada para reproduzir o núcleo das quatro especificações diretamente em R, sem exigir instalação local.** Esta montagem usa o mesmo painel, transformações, configuração FM-OLS e regra de reexpressão ao centro comum da implementação validada.
 
 ::: {.callout-note title="Escopo desta montagem"}
-O código abaixo é uma migração do teste certificado já executado com o painel canônico e `cointReg`. A validação pública final continuará dependente da referência canônica estabelecida pela execução local do autor.
+Este Pilot executa e verifica os **coeficientes de média de grupo de E1–E4**. A camada inferencial, os diagnósticos, as sensibilidades e a geração integral de arquivos continuam na reprodução local até que cada componente adicional seja migrado e validado separadamente.
 :::
 
 ## 1. Verificar o ambiente no navegador
@@ -37,99 +39,49 @@ exists(
 )
 ```
 
-## 2. Reproduzir a especificação certificada ARG–E1
+## 2. Reproduzir E1–E4
 
-**Este bloco reconstrói a estimação E1 para a Argentina a partir do painel canônico distribuído, aplica a centralização local e reexpressa os coeficientes no centro comum do painel.** O resultado é então comparado ao benchmark usado no teste de viabilidade.
+**O núcleo abaixo é compartilhado com a validação automatizada do repositório.** Ele prepara as variáveis analíticas, estima cada especificação separadamente para os cinco países, reexpressa o polinômio de renda no centro comum do painel e forma a média simples do grupo.
 
 ```{webr}
-library(cointReg)
+source("recursos/execucao-web/e1-e4-core.R")
 
-# Painel canônico utilizado no teste certificado
-dat <- read.csv(
+core <- tcc_web_run_core(
   "data/tcc_data_panel-canonical-mercosur_1990-2023_2026-10-21_v01.csv",
-  stringsAsFactors = FALSE,
-  check.names = FALSE
+  validate = TRUE
 )
 
-# Verificações estruturais
-stopifnot(nrow(dat) == 170)
-stopifnot(setequal(unique(dat$iso3), c("ARG", "BOL", "BRA", "PRY", "URY")))
-
-# Transformações da especificação
-dat$y_excl <- log(dat$ghgpc_tco2e_excl_lulucf)
-dat$ln_gdp <- log(dat$gdp_pc_const2015_usd)
-
-common_center <- mean(dat$ln_gdp)
-
-arg <- dat[dat$iso3 == "ARG", ]
-arg <- arg[order(arg$year), ]
-
-stopifnot(nrow(arg) == 34)
-stopifnot(identical(as.integer(arg$year), 1990:2023))
-
-# Centralização local do país
-local_center <- mean(arg$ln_gdp)
-z <- arg$ln_gdp - local_center
-
-X <- cbind(
-  income  = z,
-  income2 = z^2
-)
-
-D <- matrix(1, nrow = nrow(arg), ncol = 1)
-colnames(D) <- "intercept"
-
-fit <- cointReg::cointRegFM(
-  x = X,
-  y = as.numeric(arg$y_excl),
-  deter = D,
-  kernel = "ba",
-  bandwidth = 3L,
-  demeaning = FALSE,
-  check = TRUE
-)
-
-theta_local <- as.numeric(fit$theta)
-names(theta_local) <- c("intercept", "income", "income2")
-
-# Reexpressão do centro local da Argentina para o centro comum do painel
-delta <- common_center - local_center
-
-J <- matrix(
-  c(
-    1, delta, delta^2,
-    0, 1,     2 * delta,
-    0, 0,     1
-  ),
-  nrow = 3,
-  byrow = TRUE
-)
-
-theta_common <- drop(J %*% theta_local)
-names(theta_common) <- c("intercept", "income", "income2")
-
-# Benchmark certificado anteriormente
-expected <- c(
-  intercept = 2.00937743,
-  income    = 0.19851055,
-  income2   = 0.03235887
-)
-
-diff <- theta_common - expected
-
-theta_common
-expected
-diff
+comparison <- core$comparison
+comparison$estimate <- round(comparison$estimate, 9)
+comparison$reference <- round(comparison$reference, 9)
+comparison$difference <- signif(comparison$difference, 4)
+comparison$abs_difference <- signif(comparison$abs_difference, 4)
+comparison
 
 cat(
-  "Maximum absolute coefficient difference:",
-  format(max(abs(diff)), scientific = TRUE),
+  "Centro comum do log do PIB per capita:",
+  format(core$common_center, digits = 12),
+  "\nMaior diferença absoluta:",
+  format(core$max_abs_diff, scientific = TRUE),
+  "\nTolerância:",
+  format(core$tolerance, scientific = TRUE),
   "\n"
 )
 ```
 
-## 3. Próxima expansão
+**A coluna `within_tolerance` deve permanecer verdadeira para todos os coeficientes.** O benchmark congelado usa tolerância absoluta de `1e-6`, a mesma ordem adotada no teste de viabilidade do núcleo E1–E4 em webR.
 
-**O próximo passo é substituir este teste de uma especificação pela interface guiada E1–E4 já demonstrada como numericamente compatível em webR.** A migração será feita sobre o mesmo painel e a mesma configuração de `cointReg`, preservando a reprodução local como rota completa para diagnósticos, sensibilidades e geração integral de arquivos.
+## 3. O que já está coberto
+
+- **E1:** renda e termo quadrático;
+- **E2:** E1 + intensidade energética + participação fóssil;
+- **E3:** E1 + agricultura + indústria;
+- **E4:** blocos de renda, energia e composição produtiva em conjunto.
+
+A execução utiliza Argentina, Bolívia, Brasil, Paraguai e Uruguai entre 1990 e 2023, com 170 observações no painel distribuído.
+
+## 4. Próxima expansão
+
+**O próximo limite técnico é a camada de inferência e interpretação, não mais a estimação básica de E1–E4.** Depois do teste interativo desta montagem em HTTP(S), diagnósticos e sensibilidades podem ser avaliados como módulos adicionais; a reprodução local permanece a rota completa e autoritativa para o conjunto integral de arquivos.
 
 [Ver arquivos e reprodução local](arquivos.qmd)
