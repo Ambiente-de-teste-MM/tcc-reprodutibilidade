@@ -2,13 +2,46 @@
 title: "Execução no navegador"
 ---
 
-**A execução no navegador utilizará webR para reproduzir as etapas selecionadas da análise sem exigir instalação local de R.**
+**A execução no navegador oferece uma rota guiada para reproduzir partes centrais da análise diretamente em R, sem exigir instalação local.** A implementação utilizará webR/Quarto Live e permanecerá vinculada aos mesmos dados e especificações distribuídos no pacote de reprodução.
 
-::: {.callout-warning title="Pilot 01 — integração em andamento"}
-O núcleo E1–E4 já teve sua viabilidade testada anteriormente. Nesta montagem, a posição e a narrativa da execução estão definidas; a integração completa dos blocos executáveis será inserida e validada contra a referência canônica do autor antes da publicação final.
+::: {.callout-note title="Escopo desta montagem"}
+A viabilidade numérica de E1–E4 em webR já foi demonstrada. A integração abaixo ainda será validada contra a referência canônica estabelecida pela execução local do autor antes da publicação final.
 :::
+
+## Como a execução será organizada
+
+<div class="execution-stage">
+<strong>1. Carregar e conferir os dados analíticos</strong><br>
+O navegador carrega os arquivos necessários, verifica a estrutura esperada do painel e prepara as variáveis utilizadas pelas especificações.
+</div>
+
+<div class="execution-stage">
+<strong>2. Reproduzir E1–E4</strong><br>
+As quatro especificações são executadas com o mesmo desenho econométrico utilizado pela implementação pública em R.
+</div>
+
+<div class="execution-stage">
+<strong>3. Inspecionar os resultados principais</strong><br>
+A interface apresenta coeficientes e verificações selecionadas para que a execução corrente possa ser comparada ao resultado esperado.
+</div>
+
+<div class="execution-stage">
+<strong>4. Comparar com a referência</strong><br>
+Depois que a execução canônica do autor for congelada, a versão web será validada e comparada numericamente com essa referência.
+</div>
 
 ## Área executável
 
-> **PLACEHOLDER WEBR — PILOT 01**  
-> Este bloco será substituído pela implementação Quarto Live/webR validada.
+<div class="execution-placeholder">
+<strong>Integração webR em andamento</strong>
+
+Esta posição já faz parte do layout final. O próximo passo técnico é incorporar os blocos executáveis validados para E1–E4 e, apenas depois, ampliar o escopo do navegador se os testes de integração justificarem isso.
+
+<span class="status-line">A reprodução local completa permanece disponível separadamente no Pacote de Reprodutibilidade em R.</span>
+</div>
+
+## O que permanece na reprodução local
+
+**O navegador não precisa reproduzir toda a infraestrutura do pacote para ser útil.** Diagnósticos extensos, sensibilidades, geração integral de arquivos, logs e registros do ambiente computacional permanecem disponíveis pela rota local completa. O escopo final da execução web será definido pelo que puder ser reproduzido de forma estável e verificável.
+
+[Ver arquivos e reprodução local](arquivos.qmd)
