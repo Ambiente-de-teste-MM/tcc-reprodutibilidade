@@ -1,10 +1,6 @@
 name: Testar render Quarto + webR — Pilot 01
 
 on:
-  push:
-    branches:
-      - pilot01-render-test
-      - pilot01-e1e4-core
   workflow_dispatch:
 
 permissions:
@@ -55,11 +51,16 @@ jobs:
       - name: Instalar Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Preparar Quarto Live e painel canônico para o Pilot
+      - name: Preparar Quarto Live e fonte processada do painel no Pilot
+        shell: bash
         run: |
-          mkdir -p site/_extensions site/data
+          mkdir -p site/_extensions reproducibilidade/dados/processados
           cp -R .certified-stack/_extensions/r-wasm site/_extensions/
-          cp .certified-stack/data/tcc_data_panel-canonical-mercosur_1990-2023_2026-10-21_v01.csv site/data/
+          cp .certified-stack/data/tcc_data_panel-canonical-mercosur_1990-2023_2026-10-21_v01.csv \
+            reproducibilidade/dados/processados/
+
+      - name: Derivar recurso de dados do site
+        run: python scripts/preparar_dados_site.py
 
       - name: Validar núcleo E1–E4 compartilhado
         shell: Rscript {0}
