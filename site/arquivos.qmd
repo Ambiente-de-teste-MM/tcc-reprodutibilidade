@@ -2,14 +2,37 @@
 title: "Arquivos e reprodução local"
 ---
 
-**A reprodução local continua sendo a rota completa da análise.**
+**A reprodução local é a rota completa da análise.** Ela reúne o código, os dados distribuíveis, a documentação, os resultados e os registros necessários para executar e conferir o fluxo empírico fora do navegador.
 
-O repositório público disponibilizará o código, os dados redistribuíveis, a documentação e a referência analítica aprovada. Uma versão compactada do Pacote de Reprodutibilidade em R será associada às versões publicadas do projeto.
+## Componentes do pacote
 
-## Estrutura esperada
+| Componente | Local | Função |
+| :-- | :-- | :-- |
+| Script principal | `reproducibilidade/executar_analise.R` | Encadeia a reprodução completa |
+| Código | `reproducibilidade/R/` | Reconstrução, painel, estimações, sensibilidades, tabelas e figuras |
+| Dados | `reproducibilidade/dados/` | Fontes distribuíveis, extratos normalizados e dados processados |
+| Documentação | `reproducibilidade/documentacao/` | Proveniência, ambiente, licenças e validação |
+| Referência | `reproducibilidade/referencia/` | Arquivos congelados usados nas comparações |
+| Resultados | `reproducibilidade/resultados/` | Saídas produzidas pela execução corrente |
 
-- `reproducibilidade/executar_analise.R`
-- `reproducibilidade/R/`
-- `reproducibilidade/dados/`
-- `reproducibilidade/documentacao/`
-- `reproducibilidade/referencia/`
+## Execução local
+
+**A execução começa em `executar_analise.R`.** O script confere os arquivos de entrada, reconstrói e valida o painel, executa as especificações E1–E4, gera diagnósticos e sensibilidades e grava as saídas previstas pelo pacote.
+
+O ambiente corrente também é registrado. Depois que a execução canônica do autor for validada, `documentacao/ambiente_referencia.csv` servirá como referência computacional para as execuções posteriores.
+
+## Arquivos de saída principais
+
+- `inferencia_principal.csv` — síntese da inferência principal;
+- `tcc_resultados-empiricos.xlsx` — workbook de consulta dos resultados empíricos;
+- figuras em SVG/PNG e seus dados de apoio;
+- logs e registros do ambiente computacional;
+- manifestos de entradas e saídas.
+
+::: {.callout-note title="Estado da integração"}
+A estrutura pública do pacote já está definida. A referência analítica e computacional ainda será promovida após a execução local validada do autor. O ZIP final será montado a partir desta mesma estrutura e associado à versão publicada, evitando manter cópias independentes do pacote.
+:::
+
+## Leitura antes da execução
+
+Para entender o desenho empírico e as qualificações de interpretação antes de executar o código, consulte o [Guia de Execução e Reprodutibilidade em R](guia.qmd).
