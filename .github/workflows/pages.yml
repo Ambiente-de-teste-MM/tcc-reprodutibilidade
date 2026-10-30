@@ -1,12 +1,13 @@
-name: Renderizar site Quarto — Pilot 01
+name: Testar render Quarto — Pilot 01
 
 on:
+  push:
+    branches:
+      - pilot01-render-test
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 jobs:
   build:
@@ -20,20 +21,8 @@ jobs:
         run: python scripts/preparar_guia_site.py
       - name: Renderizar site
         run: quarto render site
-      - name: Configurar Pages
-        uses: actions/configure-pages@v5
-      - name: Enviar artefato do Pages
-        uses: actions/upload-pages-artifact@v4
+      - name: Arquivar site renderizado
+        uses: actions/upload-artifact@v4
         with:
+          name: site-pilot01-render
           path: site/_site
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Publicar
-        id: deployment
-        uses: actions/deploy-pages@v4
