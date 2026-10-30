@@ -15,6 +15,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Assemble and verify Guide
         run: |
+          sed -i 's/gases do efeito estufa per capita nos membros ativos/gases de efeito estufa per capita nos membros ativos/' tmp/guide-sync/part1.txt
+          printf '\n' >> tmp/guide-sync/part1.txt
+          printf '\n' >> tmp/guide-sync/part3.txt
           cat tmp/guide-sync/part1.txt tmp/guide-sync/part2.txt tmp/guide-sync/part3.txt > guia/guia-execucao-reprodutibilidade-r.md
           echo 'e11a41f8de7fd9a7796dd06e4c28845d6f66402837de64bb304bb157f7b07818  guia/guia-execucao-reprodutibilidade-r.md' | sha256sum -c -
       - name: Commit clean synchronized tree
