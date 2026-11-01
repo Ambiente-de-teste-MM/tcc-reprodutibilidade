@@ -1,6 +1,9 @@
 name: Validar e publicar site Quarto/webR
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
