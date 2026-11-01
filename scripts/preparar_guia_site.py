@@ -24,7 +24,7 @@ EXTRA = [
     ("V04", "Construção da participação de combustíveis fósseis (FFS)",
      "A participação fóssil é calculada a partir da soma das séries de consumo de gás, petróleo e carvão", True),
     ("V05", "Linhagem das variáveis, preparação e estimação",
-     "O script principal encadeia as etapas necessárias para transformar os arquivos distribuídos nos resultados da reprodução", True),
+     "O script principal da distribuição pública encadeia as etapas necessárias para transformar o painel canônico distribuído nos resultados da reprodução", True),
     ("V06", "Diagnósticos, aplicabilidade e limites de interpretação",
      "Os diagnósticos qualificam a interpretação das estimações sem constituir novas especificações ou hipóteses", True),
     ("V07", "Sensibilidades predefinidas e alcance das conclusões",
