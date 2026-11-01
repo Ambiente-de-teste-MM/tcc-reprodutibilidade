@@ -15,7 +15,7 @@ visuals:
     title: "Construção da participação de combustíveis fósseis (FFS)"
   V05:
     status: final-rendered
-    after_contains: "O script principal encadeia as etapas necessárias para transformar os arquivos distribuídos nos resultados da reprodução"
+    after_contains: "O script principal da distribuição pública encadeia as etapas necessárias para transformar o painel canônico distribuído nos resultados da reprodução"
     title: "Linhagem das variáveis, preparação e estimação"
   V06:
     status: final-rendered
