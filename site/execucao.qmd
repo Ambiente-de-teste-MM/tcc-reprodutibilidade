@@ -27,7 +27,11 @@ webr:
 
 {{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
-**A execução no navegador reproduz a camada analítica do TCC diretamente em R: E1–E4, diagnósticos pós-estimação e sensibilidades B08/B09.** A montagem utiliza cópias exatas dos módulos analíticos do pacote canônico e o mesmo painel de 170 observações utilizado pela reprodução local.
+**A execução no navegador reproduz a camada analítica do TCC diretamente em R: E1–E4, diagnósticos pós-estimação e análises de sensibilidade.** A montagem utiliza cópias exatas dos módulos analíticos do pacote canônico e o mesmo painel de 170 observações utilizado pela reprodução local.
+
+::: {.callout-note title="Sobre os códigos B07, B08 e B09"}
+Durante o desenvolvimento e a fase de testes, a implementação foi organizada em **blocos numerados de trabalho e validação** para manter rastreabilidade entre decisões metodológicas, scripts e resultados. Três desses identificadores foram preservados no código e nos nomes internos dos arquivos: **B07** corresponde aos diagnósticos pós-estimação; **B08**, à sensibilidade a exclusões predefinidas de observações; e **B09**, à sensibilidade à inclusão de LULUCF na variável dependente. Esses códigos são rótulos de implementação, não novas especificações econométricas nem hipóteses adicionais.
+:::
 
 ::: {.callout-note title="Fronteira entre a rota web e a reprodução local"}
 A superfície pública do navegador parte do **painel analítico canônico distribuído**. A reconstrução anterior — cinco fontes preservadas → extratos normalizados → painel — permanece na reprodução local, porque os snapshots de terceiros são conservados no repositório privado e não são redistribuídos automaticamente. A fronteira de publicação muda a forma de entregar os dados, não as especificações, os estimadores, os diagnósticos ou as sensibilidades executados a partir do painel.
@@ -51,7 +55,7 @@ exists(
 
 ## 2. Executar a análise
 
-**Este bloco encadeia o mesmo núcleo analítico dos módulos canônicos `01–05`.** Ele valida o painel, prepara as transformações, estima E1–E4, executa B07 e calcula as sensibilidades B08 e B09.
+**Este bloco encadeia o mesmo núcleo analítico dos módulos canônicos `01–05`.** Ele valida o painel, prepara as transformações, estima E1–E4, executa os diagnósticos pós-estimação (B07) e calcula as sensibilidades por exclusões predefinidas (B08) e por inclusão de LULUCF (B09).
 
 ```{webr}
 source("recursos/execucao-web/full-analysis.R")
@@ -74,7 +78,7 @@ cat(
 
 **A execução é interrompida se os coeficientes do núcleo principal excederem a tolerância de `1e-6` ou se as conclusões substantivas congeladas não forem reproduzidas.** Essa verificação é adicional aos controles internos dos módulos analíticos.
 
-## 3. Diagnósticos B07
+## 3. Diagnósticos pós-estimação (B07)
 
 **Os diagnósticos qualificam a interpretação das estimativas congeladas; eles não selecionam automaticamente um novo estimador nem redefinem hipóteses.** A saída guiada apresenta os diagnósticos residuais por especificação, dependência transversal e o gate complementar de cointegração aplicado a E1.
 
@@ -93,12 +97,12 @@ diag_web$e1_cpr_summary
 ```
 
 ::: {.callout-warning title="Limite de interpretação"}
-B07 é evidência pós-estimação. Autocorrelação, heterocedasticidade, tendência residual e dependência transversal qualificam a leitura dos resultados, mas não reabrem automaticamente a estimação FM-OLS. O teste CPR formal complementar permanece restrito a E1; E2–E4 conservam a fronteira inferencial operacional adotada na metodologia.
+Os diagnósticos pós-estimação do bloco B07 constituem evidência de qualificação das estimativas. Autocorrelação, heterocedasticidade, tendência residual e dependência transversal qualificam a leitura dos resultados, mas não reabrem automaticamente a estimação FM-OLS. O teste CPR formal complementar permanece restrito a E1; E2–E4 conservam a fronteira inferencial operacional adotada na metodologia.
 :::
 
-## 4. Sensibilidade B08 — exclusões predefinidas
+## 4. Sensibilidade a exclusões predefinidas (B08)
 
-**B08 avalia como as estimativas pontuais respondem às exclusões de qualidade/quebra definidas previamente.** Não se trata de uma nova amostra principal nem de uma busca por especificações favoráveis.
+**Esta sensibilidade avalia como as estimativas pontuais respondem às exclusões de qualidade/quebra definidas previamente.** Não se trata de uma nova amostra principal nem de uma busca por especificações favoráveis.
 
 ```{webr}
 sens_web <- tcc_web_sensitivities_display(resultado_web)
@@ -107,13 +111,13 @@ sens_web$b08_model_summary
 sens_web$b08_primary_vs_reduced
 ```
 
-::: {.callout-note title="Regra de B08"}
+::: {.callout-note title="Regra da sensibilidade B08"}
 B08 permanece uma sensibilidade descritiva de estimativas pontuais. O centro de renda continua congelado no valor do painel completo, a observação Bolívia-2000 gera uma transição temporal irregular quando excluída e nenhuma inferência formal da amostra reduzida é promovida a resultado principal.
 :::
 
-## 5. Sensibilidade B09 — inclusão de LULUCF
+## 5. Sensibilidade à inclusão de LULUCF (B09)
 
-**B09 mantém a amostra completa e troca a fronteira da variável dependente para emissões per capita incluindo LULUCF.** Esta é uma sensibilidade de mensuração do desfecho; não substitui a variável dependente principal do TCC.
+**Esta sensibilidade mantém a amostra completa e troca a fronteira da variável dependente para emissões per capita incluindo LULUCF.** É uma verificação de mensuração do desfecho; não substitui a variável dependente principal do TCC.
 
 ```{webr}
 sens_web$b09_outcome_summary
@@ -135,8 +139,9 @@ A execução no navegador cobre:
 - preparação das transformações analíticas a partir do painel canônico;
 - estimações E1–E4;
 - inferência e avaliação das hipóteses implementadas nos módulos principais;
-- diagnósticos B07;
-- sensibilidades B08 e B09.
+- diagnósticos pós-estimação (B07);
+- sensibilidade a exclusões predefinidas (B08);
+- sensibilidade à inclusão de LULUCF (B09).
 
 A reprodução local continua sendo a rota de auditoria integral para:
 
