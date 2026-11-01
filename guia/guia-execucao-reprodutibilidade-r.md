@@ -9,8 +9,8 @@ Normalization: removed Google Docs export escaping only.
 # Guia de Execução e Reprodutibilidade em R
 
 **Trabalho:** *DETERMINANTES ECONÔMICAS DA EMISSÃO DE GASES DO EFEITO ESTUFA: ANÁLISE DOS MEMBROS ATIVOS DO MERCOSUL*    
-**Autor:** `[preencher a partir da identificação oficial do TCC]`    
-**Curso / Instituição:** `[preencher a partir da identificação oficial do TCC]`
+**Autor:** MATHEUS MOSER    
+**Curso / Instituição:** Curso de Ciências Econômicas / Universidade Regional de Blumenau
 
 **Este guia permite compreender, inspecionar e reproduzir a análise empírica do TCC em diferentes níveis de detalhe.**
 
