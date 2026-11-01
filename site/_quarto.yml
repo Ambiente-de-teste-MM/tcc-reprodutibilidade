@@ -1,6 +1,9 @@
 project:
   type: website
   output-dir: _site
+  resources:
+    - diagram-viewer.html
+    - assets/visuais/**
 
 website:
   title: "Determinantes Econômicas da Emissão de GEE"
