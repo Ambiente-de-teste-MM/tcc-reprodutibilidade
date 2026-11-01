@@ -1,6 +1,9 @@
 name: Validar e publicar site Quarto/webR
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -95,9 +98,10 @@ jobs:
           grep -q "Sensibilidade à inclusão de LULUCF (B09)" site/_site/execucao.html
           for v in V01 V02 V04 V05 V06 V07; do
             test -f "site/assets/visuais/${v}.svg"
-            grep -q "id=\"${v,,}\"" site/_site/guia.html
+            lower="$(printf '%s' "$v" | tr '[:upper:]' '[:lower:]')"
+            grep -q "class=\"visual-slot\" id=\"${lower}\"" site/conteudo/guia-site.md
           done
-          grep -q 'class="visual-placeholder" id="v03"' site/_site/guia.html
+          grep -q 'class="visual-placeholder" id="v03"' site/conteudo/guia-site.md
 
       - name: Configurar Pages
         uses: actions/configure-pages@v5
