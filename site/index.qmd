@@ -9,6 +9,12 @@ page-layout: full
 Este site acompanha o TCC e organiza sua reprodução empírica em três rotas: compreender o desenho e os resultados, executar a análise no navegador e reproduzir localmente a implementação pública em R.
 :::
 
+<!-- PERSONAL-METADATA:START -->
+::: {.callout-note title="Publicação e código"}
+**Repositório público:** [https://github.com/Ambiente-de-teste-MM/tcc-reprodutibilidade](https://github.com/Ambiente-de-teste-MM/tcc-reprodutibilidade)
+:::
+<!-- PERSONAL-METADATA:END -->
+
 <div class="fact-strip">
   <div class="fact-item"><strong>5 países</strong><span>Argentina, Bolívia, Brasil, Paraguai e Uruguai</span></div>
   <div class="fact-item"><strong>1990–2023</strong><span>34 anos</span></div>
@@ -52,5 +58,5 @@ A página de [arquivos e reprodução local](arquivos.qmd) organiza o código, o
 A variável dependente principal são as emissões de gases de efeito estufa per capita excluindo LULUCF. A análise é associacional, não causal.
 
 ::: {.callout-note title="Estado da publicação"}
-O núcleo analítico, os diagnósticos e as sensibilidades estão integrados às rotas local e web. O repositório público distribui o painel canônico derivado; a reconstrução anterior a partir dos snapshots de terceiros permanece certificada na camada canônica privada. Os visuais do Guia permanecem em posições definitivas com placeholders até a inserção dos SVGs finais.
+O núcleo analítico, os diagnósticos e as sensibilidades estão integrados às rotas local e web. O repositório público distribui o painel canônico derivado; a reconstrução anterior a partir dos snapshots de terceiros permanece certificada na camada canônica privada. Os visuais V01, V02 e V04–V07 estão incorporados como SVGs navegáveis; V03 permanece temporariamente como placeholder até o render de sua fonte corrigida.
 :::
