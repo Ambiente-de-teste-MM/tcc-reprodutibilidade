@@ -1,6 +1,9 @@
 name: Validar e publicar site Quarto/webR
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -90,9 +93,9 @@ jobs:
           test -f site/_site/guia.html
           test -f site/_site/execucao.html
           test -f site/_site/arquivos.html
-          grep -q "Diagnósticos B07" site/_site/execucao.html
-          grep -q "Sensibilidade B08" site/_site/execucao.html
-          grep -q "Sensibilidade B09" site/_site/execucao.html
+          grep -q "Diagnósticos pós-estimação (B07)" site/_site/execucao.html
+          grep -q "Sensibilidade a exclusões predefinidas (B08)" site/_site/execucao.html
+          grep -q "Sensibilidade à inclusão de LULUCF (B09)" site/_site/execucao.html
           grep -Eq "visual-placeholder|visual-slot" site/_site/guia.html
 
       - name: Configurar Pages
