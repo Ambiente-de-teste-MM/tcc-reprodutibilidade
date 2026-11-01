@@ -19,6 +19,7 @@ GUIDE = ROOT / "guia" / "guia-execucao-reprodutibilidade-r.md"
 OUT = ROOT / "site" / "conteudo" / "guia-site.md"
 VISUAL_DIR = ROOT / "site" / "assets" / "visuais"
 PATTERN = re.compile(r"^\*\*\[VISUAL (V\d{2}) — (.+)\]\*\*\s*$")
+VIEWER_VERSION = "2"
 
 EXTRA = [
     ("V04", "Construção da participação de combustíveis fósseis (FFS)",
@@ -37,7 +38,8 @@ def render_slot(code: str, description: str) -> str:
     if svg.exists():
         visual_path = f"assets/visuais/{code}.svg"
         viewer_src = (
-            "diagram-viewer.html?src=" + quote(visual_path, safe="") +
+            "diagram-viewer.html?v=" + VIEWER_VERSION +
+            "&src=" + quote(visual_path, safe="") +
             "&alt=" + quote(description, safe="")
         )
         return (
