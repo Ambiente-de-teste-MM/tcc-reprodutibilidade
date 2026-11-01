@@ -1,3 +1,4 @@
+# Explicit resources below are required by the interactive SVG viewer on GitHub Pages.
 project:
   type: website
   output-dir: _site
