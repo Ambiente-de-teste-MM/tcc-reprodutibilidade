@@ -18,20 +18,25 @@ Este site acompanha o TCC e organiza sua reprodução empírica em três rotas: 
 
 ## Escolha uma rota
 
-<div class="route-grid">
-  <div class="route-card">
-    <h3>Compreender</h3>
-    <p>O <a href="guia.qmd">Guia de Execução e Reprodutibilidade em R</a> apresenta o desenho analítico, os dados, as estimações, os resultados, os diagnósticos e os limites da reprodução.</p>
-  </div>
-  <div class="route-card">
-    <h3>Executar no navegador</h3>
-    <p>A <a href="execucao.qmd">execução web</a> reproduz E1–E4, diagnósticos e sensibilidades diretamente em R via webR, sem exigir uma instalação local.</p>
-  </div>
-  <div class="route-card">
-    <h3>Reproduzir localmente</h3>
-    <p>A página de <a href="arquivos.qmd">arquivos e reprodução local</a> organiza o código, o painel distribuído, a documentação e as saídas produzidas pelo pacote público.</p>
-  </div>
-</div>
+:::: {.route-grid}
+::: {.route-card}
+### Compreender
+
+O [Guia de Execução e Reprodutibilidade em R](guia.qmd) apresenta o desenho analítico, os dados, as estimações, os resultados, os diagnósticos e os limites da reprodução.
+:::
+
+::: {.route-card}
+### Executar no navegador
+
+A [execução web](execucao.qmd) reproduz E1–E4, diagnósticos e sensibilidades diretamente em R via webR, sem exigir uma instalação local.
+:::
+
+::: {.route-card}
+### Reproduzir localmente
+
+A página de [arquivos e reprodução local](arquivos.qmd) organiza o código, o painel distribuído, a documentação e as saídas produzidas pelo pacote público.
+:::
+::::
 
 ## Arquitetura empírica
 
