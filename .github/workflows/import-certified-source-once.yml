@@ -1,4 +1,3 @@
-# One-shot import trigger: registered 2026-10-31
 name: Importar snapshot público certificado (one-shot)
 
 on:
@@ -22,27 +21,25 @@ jobs:
           ref: release-candidate-2026-10-30
           fetch-depth: 0
 
-      - name: Reconstruir e verificar snapshot certificado
+      - name: Baixar e verificar artefato público certificado
         shell: bash
         run: |
           set -euo pipefail
-          cat \
-            _import/source.xz.b64.part-00 \
-            _import/fixed.part-01 \
-            _import/fixed.part-02 \
-            _import/fixed.part-03 \
-            _import/source.xz.b64.part-04 \
-            _import/fixed.part-05 \
-            _import/fixed.part-06 \
-            _import/fixed.part-07 \
-            _import/fixed.part-08 \
-            _import/fixed.part-09 \
-            > /tmp/source.b64
-          base64 -d /tmp/source.b64 > /tmp/source.tar.xz
-          echo "106a295aadd180b2bfbea712f78dfe82d64250868466e78f8059b8ea2c50ffe7  /tmp/source.tar.xz" | sha256sum -c -
+          curl --fail --location --retry 3 \
+            'https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-9854-820e-9619-48d6031242e2/raw?se=2026-11-01T20%3A15%3A55Z&sp=r&sv=2026-02-06&sr=b&scid=f833e7be-cd4b-5651-af94-8e490542639e&skoid=db6dad9e-03ee-465b-aef6-ce0f63a161dc&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-11-01T11%3A58%3A29Z&ske=2026-11-02T11%3A58%3A29Z&sks=b&skv=2026-02-06&sig=HZutwRUlzEqJdJQg94LNpSTY0jtvz1GGBMbEKlIBsK8%3D' \
+            --output /tmp/public-repository-candidate.zip
+          echo '657efaad34668825c00fc8508915a5aa04e05806eb9a347cb98d79e79fa2e11a  /tmp/public-repository-candidate.zip' | sha256sum -c -
           rm -rf /tmp/source
           mkdir /tmp/source
-          tar -xJf /tmp/source.tar.xz -C /tmp/source
+          unzip -q /tmp/public-repository-candidate.zip -d /tmp/source
+
+          # Remove only products generated during integrated CI. The remaining
+          # source tree is the certified 42-file publication snapshot.
+          rm -rf /tmp/source/reproducibilidade/resultados
+          rm -rf /tmp/source/site/.quarto
+          rm -rf /tmp/source/site/_extensions
+          rm -rf /tmp/source/site/_site
+
           test -f /tmp/source/README.md
           test -f /tmp/source/reproducibilidade/executar_analise.R
           test -f /tmp/source/reproducibilidade/referencia/ambiente_execucao_referencia.csv
@@ -56,6 +53,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
+          # Preserve .git and workflows so this job never rewrites/deletes its
+          # own workflow through GITHUB_TOKEN. Workflows are reconciled through
+          # the repository connector immediately after this one-shot import.
           find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .github -exec rm -rf {} +
           mkdir -p .github/workflows
           find .github -mindepth 1 -maxdepth 1 ! -name workflows -exec rm -rf {} +
@@ -63,10 +64,11 @@ jobs:
             find /tmp/source/.github -mindepth 1 -maxdepth 1 ! -name workflows -exec cp -a {} .github/ \;
           fi
           find /tmp/source -mindepth 1 -maxdepth 1 ! -name .github -exec cp -a {} . \;
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m "Import certified public source snapshot"
+          git commit -m 'Import certified public source snapshot'
           git push origin HEAD:release-candidate-2026-10-30
 
       - name: Confirmar superfícies essenciais importadas
