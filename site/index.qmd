@@ -6,7 +6,7 @@ page-layout: full
 ::: {.hero-panel}
 **Análise dos membros ativos do Mercosul, 1990–2023.**
 
-Este site acompanha o TCC e organiza sua reprodução empírica em três rotas: compreender o desenho e os resultados, executar o núcleo da análise no navegador e reproduzir localmente a implementação completa em R.
+Este site acompanha o TCC e organiza sua reprodução empírica em três rotas: compreender o desenho e os resultados, executar a análise no navegador e reproduzir localmente a implementação pública em R.
 :::
 
 <div class="fact-strip">
@@ -25,11 +25,11 @@ Este site acompanha o TCC e organiza sua reprodução empírica em três rotas: 
   </div>
   <div class="route-card">
     <h3>Executar no navegador</h3>
-    <p>A <a href="execucao.qmd">execução web</a> será a rota mais simples para reproduzir e inspecionar o núcleo econométrico sem instalar R localmente.</p>
+    <p>A <a href="execucao.qmd">execução web</a> reproduz E1–E4, diagnósticos e sensibilidades diretamente em R via webR, sem exigir uma instalação local.</p>
   </div>
   <div class="route-card">
     <h3>Reproduzir localmente</h3>
-    <p>A página de <a href="arquivos.qmd">arquivos e reprodução local</a> organiza o código, os dados distribuíveis, a documentação e os resultados de referência do pacote completo.</p>
+    <p>A página de <a href="arquivos.qmd">arquivos e reprodução local</a> organiza o código, o painel distribuído, a documentação e as saídas produzidas pelo pacote público.</p>
   </div>
 </div>
 
@@ -46,6 +46,6 @@ Este site acompanha o TCC e organiza sua reprodução empírica em três rotas: 
 
 A variável dependente principal são as emissões de gases de efeito estufa per capita excluindo LULUCF. A análise é associacional, não causal.
 
-::: {.callout-note title="Estado da integração"}
-O Guia v13 já está integrado nesta montagem de teste. A referência analítica canônica ainda depende da execução local validada do autor, e a área webR está em integração. Os visuais utilizam posições definitivas com placeholders enquanto os SVGs finais não forem inseridos.
+::: {.callout-note title="Estado da publicação"}
+O núcleo analítico, os diagnósticos e as sensibilidades estão integrados às rotas local e web. O repositório público distribui o painel canônico derivado; a reconstrução anterior a partir dos snapshots de terceiros permanece certificada na camada canônica privada. Os visuais do Guia permanecem em posições definitivas com placeholders até a inserção dos SVGs finais.
 :::

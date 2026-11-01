@@ -1,8 +1,8 @@
 <!--
 Publication mirror derived from Google Doc: tcc_stage-viii_guia-execucao-reprodutibilidade-r_draft_2026-10-29_v13
 Drive ID: 1httY8nO8TQuPFFxx3qO7Q0svKYLLBGzJq7OIXhcWS54
-Source revision after browser/local scope conformity repair: AHj4eMTRBoeFpBnOiUNfg6A7gw47rkPE4X0FZQQF1NKFNWbmb7Hocw-GY8wbcT-SpOnzvcSQyrrKMgUgLRZfnl_Qw2OD4hsJ_mfgFoitNg
-Status at synchronization: Pass 05 candidate; not a new substantive version.
+Source revision after public-data/browser-route conformity repair: AHj4eMRsVhX7vMiv-bryQG6IVALtkFaMNVr-ZWQ_V05VtewdpsoKOQnB6ZWjjGVBWwEBacgZ5tq6cXNKrNeFQ2DeuEsq7elUJqoa7L27Aw
+Status at synchronization: Pass 05 publication candidate; visual placeholders intentionally retained.
 Normalization: removed Google Docs export escaping only.
 -->
 
@@ -16,7 +16,7 @@ Normalization: removed Google Docs export escaping only.
 
 **O guia avança da estrutura da pesquisa até a validação da reprodução.** O percurso começa pelo desenho analítico, passa pela construção dos dados e pelas estimações e termina nos resultados, diagnósticos e verificações de reprodução.
 
-**A execução no navegador e a reprodução local percorrem o mesmo fluxo analítico.** A versão web permite executar a reprodução diretamente no navegador, sem instalação local de R, enquanto o Pacote de Reprodutibilidade em R oferece acesso direto ao código, aos arquivos gerados e ao ambiente de execução para inspeção e validação mais controladas.
+**A execução no navegador e a reprodução local pública convergem no mesmo núcleo analítico a partir do painel canônico.** A versão web executa transformações, estimações, diagnósticos e sensibilidades diretamente no navegador; o pacote local público parte do mesmo painel e acrescenta a geração integral de arquivos, tabelas, figuras e registros de ambiente. A reconstrução anterior a partir dos snapshots preservados é certificada separadamente na camada canônica privada.
 
 ---
 
@@ -63,13 +63,13 @@ Normalization: removed Google Docs export escaping only.
 
 **A leitura sequencial acompanha a análise do desenho empírico aos resultados.** Ela passa pela construção dos dados, pela forma como a reprodução é executada e, ao final, pelos limites e verificações da análise.
 
-**No navegador, a análise pode ser reproduzida sem uma instalação local de R.** A versão web executa o mesmo fluxo analítico da reprodução, da reconstrução dos dados às transformações, estimações, diagnósticos e sensibilidades, com uma apresentação mais guiada dos resultados.
+**No navegador, a análise pode ser reproduzida sem uma instalação local de R.** A versão web parte do painel analítico canônico distribuído e executa as transformações analíticas, estimações, diagnósticos e sensibilidades, com uma apresentação mais guiada dos resultados. A reconstrução anterior a partir das cinco fontes preservadas é certificada separadamente na camada canônica privada e não depende da superfície pública.
 
-**A reprodução local utiliza o Pacote de Reprodutibilidade em R.** Nele estão o código, os dados necessários, a documentação e as instruções de execução.
+**A reprodução local pública utiliza o Pacote de Reprodutibilidade em R a partir do painel analítico canônico distribuído.** Nele estão o código, o painel, a documentação e as instruções necessárias para regenerar E1–E4, diagnósticos, sensibilidades, tabelas e figuras.
 
 **Uma versão estática em Markdown acompanha o pacote e preserva as orientações essenciais do guia.** Dessa forma, a documentação permanece disponível também para uso local.
 
-<small>O ambiente computacional de referência é estabelecido pela execução local validada do autor e registrado em `documentacao/ambiente_referencia.csv`. A implementação pública passa posteriormente por uma validação própria contra essa referência.</small>
+<small>O ambiente computacional de referência é estabelecido pela execução local validada do autor e registrado em `referencia/ambiente_execucao_referencia.csv`. A implementação pública passa posteriormente por uma validação própria contra essa referência.</small>
 
 ---
 
@@ -159,7 +159,7 @@ Normalization: removed Google Docs export escaping only.
 | Our World in Data (OWID) | Gás, petróleo e carvão | Componentes da participação fóssil |  
 | Our World in Data (OWID) | Oferta total de energia | Denominador da participação fóssil |
 
-<small>A documentação do pacote identifica os arquivos preservados, sua proveniência, integridade e condições de redistribuição.</small>
+<small>A documentação do pacote identifica os arquivos preservados, sua proveniência, integridade e condições de redistribuição. Os cinco snapshots permanecem na camada canônica privada; a superfície pública distribui o painel analítico derivado e o código necessário para reproduzir a análise a partir dele.</small>
 
 ---
 
@@ -229,12 +229,12 @@ Normalization: removed Google Docs export escaping only.
 
 # 3. Como a reprodução funciona
 
-**A análise pode ser reproduzida no navegador ou localmente em R.** As duas formas executam o mesmo fluxo analítico, da reconstrução dos dados às estimações, diagnósticos e sensibilidades, mas servem a usos diferentes: a versão web prioriza a execução guiada e a inspeção dos resultados na interface, enquanto a execução local dá acesso direto ao código, aos arquivos gerados e ao ambiente de execução.
+**A análise pode ser reproduzida no navegador ou localmente em R.** As duas formas públicas compartilham o mesmo núcleo analítico a partir do painel canônico, mas servem a usos diferentes: a versão web prioriza a execução guiada das transformações, estimações, diagnósticos e sensibilidades; o pacote local público também parte do painel canônico e acrescenta acesso direto ao código, aos arquivos gerados e ao ambiente de execução. A reconstrução desde as fontes preservadas permanece como certificação separada na camada canônica privada.
 
 | Forma de execução | Execução | Apresentação |  
 | :---- | :---- | :---- |  
-| Navegador | Fluxo analítico da reprodução | Seleção guiada dos principais resultados, diagnósticos e etapas |  
-| Local em R | Fluxo analítico da reprodução | Acesso direto ao código, às etapas e ao conjunto de arquivos produzidos |
+| Navegador | Painel canônico → transformações → E1–E4 → diagnósticos → sensibilidades | Seleção guiada dos principais resultados, diagnósticos e etapas |  
+| Local em R | Painel canônico → núcleo analítico completo + arquivos e ambiente | Acesso direto ao código, às etapas e ao conjunto de arquivos produzidos |
 
 <small>A execução local também permite maior aproximação ao ambiente utilizado na reprodução de referência, especialmente quando são observadas as versões de R, pacotes e parâmetros documentados no Pacote de Reprodutibilidade em R.</small>
 
@@ -242,11 +242,11 @@ Normalization: removed Google Docs export escaping only.
 
 ## Execução no navegador
 
-**A versão web executa a análise em R diretamente no navegador.** Isso permite acompanhar a preparação dos dados, as estimações e as etapas posteriores sem configurar previamente uma instalação local de R.
+**A versão web executa a análise em R diretamente no navegador.** Isso permite acompanhar a preparação das transformações a partir do painel canônico, as estimações, os diagnósticos e as sensibilidades sem configurar previamente uma instalação local de R.
 
 **A versão web destaca apenas o que é mais útil para acompanhar a reprodução.** As especificações E1–E4, seus principais coeficientes e os diagnósticos centrais aparecem com maior destaque; resultados auxiliares continuam disponíveis, mas não ocupam o fluxo principal do guia. Assim, a reprodução permanece inspecionável sem virar uma sequência extensa de tabelas e saídas técnicas.
 
-**A diferença está na apresentação, não em uma análise econometricamente reduzida.** O procedimento continua sendo tratado como um processo único; a versão web apenas organiza o que recebe maior ou menor destaque.
+**A partir do painel canônico, a diferença está na apresentação, não em uma análise econometricamente reduzida.** A versão web executa o mesmo núcleo econométrico de E1–E4, diagnósticos e sensibilidades; a única etapa omitida da superfície pública é a reconstrução anterior dos snapshots de terceiros.
 
 <small>A execução no navegador utiliza R por meio de webR. A compatibilidade de E1–E4 já foi verificada numericamente contra os resultados de referência; o alcance final do fluxo executável na versão publicada ainda depende da verificação direta da implementação web.</small>
 
@@ -254,7 +254,7 @@ Normalization: removed Google Docs export escaping only.
 
 ## Execução local do pacote
 
-**A reprodução local utiliza diretamente os arquivos do Pacote de Reprodutibilidade em R e oferece acesso integral ao código e às saídas produzidas.** O ponto de entrada é o arquivo `executar_analise.R`, localizado na raiz do pacote, que coordena os módulos responsáveis pela preparação dos dados, estimações, diagnósticos, sensibilidades, tabelas e figuras.
+**A reprodução local pública utiliza diretamente os arquivos do Pacote de Reprodutibilidade em R e oferece acesso integral ao código e às saídas produzidas a partir do painel canônico.** O ponto de entrada é o arquivo `executar_analise.R`, localizado na raiz do pacote, que valida o painel distribuído e coordena os módulos responsáveis pelas transformações, estimações, diagnósticos, sensibilidades, tabelas e figuras.
 
 **Em RStudio, a forma mais simples é abrir a pasta do pacote e executar `executar_analise.R`.** A partir daí, é possível acompanhar o código, inspecionar os objetos e arquivos gerados e abrir os módulos individuais quando uma etapa exigir mais detalhe.
 
@@ -285,7 +285,7 @@ Rscript --vanilla executar_analise.R
 | `R/06_tabelas.R` | Produz as tabelas e saídas tabulares |  
 | `R/07_figuras.R` | Produz as figuras da reprodução |
 
-**[VISUAL V03 — duas rotas para o mesmo fluxo analítico: navegador (Quarto/webR → execução guiada e seleção de saídas) / pacote local (`executar_analise.R` → módulos R/01–07 → inspeção direta dos arquivos e saídas), com referência separada]**
+**[VISUAL V03 — duas rotas públicas que partem do mesmo painel canônico: navegador (painel distribuído → Quarto/webR → E1–E4 → diagnósticos → sensibilidades) / pacote local (`executar_analise.R` → módulos R/01–07 → tabelas, figuras e registros), com certificação privada anterior das fontes → painel]**
 
 <small>A numeração organiza os arquivos para leitura e manutenção. A sequência efetiva das operações é controlada pelo script `executar_analise.R`.</small>
 
@@ -293,7 +293,7 @@ Rscript --vanilla executar_analise.R
 
 ## Da execução aos resultados
 
-**O script principal encadeia as etapas necessárias para transformar os arquivos distribuídos nos resultados da reprodução.** O fluxo começa com a configuração do ambiente e a verificação das entradas, passa pela reconstrução e preparação dos dados e segue para estimações, diagnósticos e sensibilidades.
+**O script principal da distribuição pública encadeia as etapas necessárias para transformar o painel canônico distribuído nos resultados da reprodução.** O fluxo começa com a configuração do ambiente e a verificação da entrada canônica, passa pelas transformações analíticas e segue para estimações, diagnósticos e sensibilidades. A reconstrução desde as fontes preservadas é certificada separadamente na camada canônica privada.
 
 **Ao final, os resultados da análise são gravados em arquivos que podem ser consultados fora do R.** Isso inclui tabelas, figuras, arquivos consolidados e outras saídas usadas para conferir os resultados e registrar a execução.
 
@@ -429,12 +429,12 @@ Essas figuras têm função descritiva e contextual. **As diferenças visuais en
 
 **A validação é feita em duas etapas.** Primeiro, uma execução local limpa no ambiente do autor estabelece a referência canônica da análise e registra o ambiente computacional correspondente. Depois, quando o repositório, o pacote e a versão web estiverem montados, a implementação pública será executada de ponta a ponta e comparada com essa referência.
 
-A validação da implementação pública deverá confirmar a reconstrução dos cinco extratos normalizados, do painel balanceado com 170 observações, das especificações E1–E4, dos diagnósticos e das análises de sensibilidade, além da regeneração das tabelas, figuras e informações do ambiente de execução.
+A validação da implementação pública deverá confirmar a identidade do painel canônico distribuído com 170 observações, a reprodução de E1–E4, dos diagnósticos e das análises de sensibilidade e o funcionamento efetivo da execução em webR. A reconstrução dos cinco extratos e do painel desde os snapshots preservados é validada separadamente na camada canônica privada.
 
 | Etapa a verificar | Critério de fechamento |  
 | :---- | :---- |  
-| Fontes → extratos normalizados | Reconstrução limpa confirmada |  
-| Extratos → painel analítico | Reconstrução e identidade do painel confirmadas |  
+| Fontes → extratos normalizados | Gate privado de reconstrução limpa confirmado |  
+| Extratos → painel analítico | Gate privado confirma a reconstrução; publicação confirma a identidade do painel distribuído |  
 | Especificações E1–E4 | Resultados da implementação publicável validados |  
 | Diagnósticos | Regeneração e consistência confirmadas |  
 | Sensibilidades | Regeneração e consistência confirmadas |  
@@ -452,7 +452,7 @@ A validação da implementação pública deverá confirmar a reconstrução dos
 
 **O ambiente computacional de referência é registrado a partir da execução local validada do autor, e cada nova execução gera um registro comparável.** Isso permite identificar diferenças de versão, plataforma ou configuração sem exigir que os ambientes sejam idênticos.
 
-Depois da validação da execução canônica do autor, seu registro é preservado em `documentacao/ambiente_referencia.csv`. Em cada nova reprodução, o script coleta novamente as informações disponíveis e grava o ambiente corrente na pasta de resultados, permitindo a comparação entre os dois registros.
+Depois da validação da execução canônica do autor, seu registro é preservado em `referencia/ambiente_execucao_referencia.csv`. Em cada nova reprodução, o script coleta novamente as informações disponíveis e grava o ambiente corrente na pasta de resultados, permitindo a comparação entre os dois registros.
 
 | Informação | Exemplo de registro |  
 | :---- | :---- |  
@@ -467,7 +467,7 @@ Depois da validação da execução canônica do autor, seu registro é preserva
 
 **Os dois registros utilizam a mesma estrutura para facilitar a comparação entre execuções.** Em ambientes nos quais determinado campo não se aplica — como RStudio em uma execução diretamente pelo navegador — ele pode ser registrado como não aplicável.
 
-<small>A referência computacional é preservada em `documentacao/ambiente_referencia.csv`; cada execução grava `resultados/logs/ambiente_execucao.csv` e, quando a referência está disponível, `resultados/logs/comparacao_ambiente.csv`, além das versões de pacotes e de `sessionInfo()`.</small>
+<small>A referência computacional é preservada em `referencia/ambiente_execucao_referencia.csv`; cada execução grava `resultados/logs/ambiente_execucao.csv` e, quando a referência está disponível, `resultados/logs/comparacao_ambiente.csv`, além das versões de pacotes e de `sessionInfo()`.</small>
 
 ---
 
@@ -502,14 +502,14 @@ A Figura 1 é um exemplo desse uso: a versão congelada a partir da execução d
 | Visão geral e instruções | `README.md` |  
 | Execução completa | `executar_analise.R` |  
 | Código da análise | `R/` |  
-| Fontes preservadas | `dados/fontes_originais/` |  
-| Extratos normalizados | `dados/extratos_csv/` |  
+| Fontes preservadas | `dados/fontes_originais/` — camada canônica privada |  
+| Extratos normalizados | `dados/extratos_csv/` — gerados na certificação canônica privada |  
 | Painel e dados processados | `dados/processados/` |  
 | Dicionário do código | `documentacao/dicionario_codigo.md` |  
 | Fluxo da análise | `documentacao/fluxo_da_analise.md` |  
 | Proveniência dos dados | `documentacao/proveniencia_dados.csv` |  
 | Documentação do ambiente computacional | `documentacao/ambiente_computacional.md` |  
-| Registro computacional de referência | `documentacao/ambiente_referencia.csv` |  
+| Registro computacional de referência | `referencia/ambiente_execucao_referencia.csv` |  
 | Ambiente da execução atual | `resultados/logs/ambiente_execucao.csv` |  
 | Fontes e licenças | `documentacao/fontes_e_licencas.md` |  
 | Validação da reprodução | `documentacao/validacao_reprodutibilidade.md` |  
@@ -546,5 +546,5 @@ A Figura 1 é um exemplo desse uso: a versão congelada a partir da execução d
 
 ## Encerramento
 
-**O guia conecta a descrição da pesquisa aos arquivos usados para reproduzir e conferir sua análise empírica.** A versão web permite acompanhar a execução e os resultados principais; o pacote local mantém o código, os dados, as saídas e a documentação completa para uma inspeção mais detalhada.
+**O guia conecta a descrição da pesquisa aos arquivos usados para reproduzir e conferir sua análise empírica.** A versão web permite acompanhar a execução e os resultados principais; o pacote local público mantém o código, o painel distribuído, as saídas e a documentação para uma inspeção mais detalhada, enquanto a camada canônica privada preserva adicionalmente a certificação desde as fontes.
 

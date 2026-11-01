@@ -100,6 +100,14 @@ body {
   margin: 1.75rem 0;
 }
 
+.visual-frame {
+  width: 100%;
+  min-height: 38rem;
+  border: 1px solid var(--tcc-line);
+  border-radius: .45rem;
+  background: var(--tcc-soft);
+}
+
 .visual-svg {
   width: 100%;
   height: auto;
@@ -120,5 +128,8 @@ body {
   .route-grid,
   .fact-strip {
     grid-template-columns: 1fr;
+  }
+  .visual-frame {
+    min-height: 28rem;
   }
 }

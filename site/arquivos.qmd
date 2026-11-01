@@ -2,24 +2,28 @@
 title: "Arquivos e reprodução local"
 ---
 
-**A reprodução local é a rota completa da análise.** Ela reúne o código, os dados distribuíveis, a documentação, os resultados e os registros necessários para executar e conferir o fluxo empírico fora do navegador.
+**A reprodução local pública executa a análise completa a partir do painel analítico canônico distribuído.** Ela reúne código, painel, documentação e as rotinas necessárias para reproduzir E1–E4, diagnósticos, sensibilidades, tabelas, figuras e registros de execução fora do navegador.
 
 ## Componentes do pacote
 
 | Componente | Local | Função |
 | :-- | :-- | :-- |
-| Script principal | `reproducibilidade/executar_analise.R` | Encadeia a reprodução completa |
-| Código | `reproducibilidade/R/` | Reconstrução, painel, estimações, sensibilidades, tabelas e figuras |
-| Dados | `reproducibilidade/dados/` | Fontes distribuíveis, extratos normalizados e dados processados |
-| Documentação | `reproducibilidade/documentacao/` | Proveniência, ambiente, licenças e validação |
-| Referência | `reproducibilidade/referencia/` | Arquivos congelados usados nas comparações |
-| Resultados | `reproducibilidade/resultados/` | Saídas produzidas pela execução corrente |
+| Script principal | `reproducibilidade/executar_analise.R` | Encadeia a reprodução pública a partir do painel canônico |
+| Código | `reproducibilidade/R/` | Transformações, estimações, diagnósticos, sensibilidades, tabelas e figuras |
+| Painel distribuído | `reproducibilidade/dados/processados/` | Entrada analítica canônica, 170 observações |
+| Documentação | `reproducibilidade/documentacao/` | Proveniência, ambiente, licenças e fronteira de redistribuição |
+| Referência | `reproducibilidade/referencia/` | Arquivos congelados usados nas comparações quando promovidos |
+| Resultados | `reproducibilidade/resultados/` | Saídas criadas pela execução corrente |
 
 ## Execução local
 
-**A execução começa em `executar_analise.R`.** O script confere os arquivos de entrada, reconstrói e valida o painel, executa as especificações E1–E4, gera diagnósticos e sensibilidades e grava as saídas previstas pelo pacote.
+**A execução começa em `executar_analise.R`.** O script valida a identidade do painel distribuído, prepara as transformações, executa E1–E4, gera diagnósticos e sensibilidades, produz tabelas e figuras e grava os registros previstos pelo pacote.
 
-O ambiente corrente também é registrado. Depois que a execução canônica do autor for validada, `documentacao/ambiente_referencia.csv` servirá como referência computacional para as execuções posteriores.
+O ambiente corrente também é registrado. Depois que a execução canônica do autor for validada, `referencia/ambiente_execucao_referencia.csv` servirá como referência computacional para comparações posteriores.
+
+::: {.callout-note title="Reconstrução das fontes"}
+A camada canônica privada preserva e certifica a cadeia anterior **cinco snapshots de origem → extratos normalizados → painel analítico**. Os snapshots de terceiros e seus extratos intermediários não são espelhados no repositório público. A reconstrução validada é documentada na proveniência, enquanto a distribuição pública começa no painel canônico derivado.
+:::
 
 ## Arquivos de saída principais
 
@@ -29,8 +33,8 @@ O ambiente corrente também é registrado. Depois que a execução canônica do 
 - logs e registros do ambiente computacional;
 - manifestos de entradas e saídas.
 
-::: {.callout-note title="Estado da integração"}
-A estrutura pública do pacote já está definida. A referência analítica e computacional ainda será promovida após a execução local validada do autor. O ZIP final será montado a partir desta mesma estrutura e associado à versão publicada, evitando manter cópias independentes do pacote.
+::: {.callout-note title="Visuais do Guia"}
+Os diagramas editoriais do Guia são independentes desta execução. Enquanto os SVGs finais de Mermaid/draw.io não forem commitados, o site mantém seus placeholders nas posições definitivas.
 :::
 
 ## Leitura antes da execução

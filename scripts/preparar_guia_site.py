@@ -2,15 +2,17 @@
 """Gera a versão de site do Guia sem alterar sua fonte canônica.
 
 - V01–V03: substituem marcadores explícitos já presentes no Guia.
-- V04–V06: slots adicionais em posições definidas pelo Pilot 01.
-- V07: opcional e desabilitado por padrão, conforme seu brief editorial.
+- V04–V06: slots adicionais em posições editoriais definidas.
+- V07: opcional e desabilitado por padrão, conforme o controle editorial.
 
-Se o SVG final existir, ele é incorporado; caso contrário, a posição é ocupada
-por um placeholder visível. Assim, o layout pode ser testado antes da conclusão
-dos visuais.
+Se o SVG final existir, ele é incorporado pelo viewer Panzoom isolado; caso
+contrário, a posição é ocupada por um placeholder visível. Assim, o site pode
+ser publicado antes da conclusão dos visuais e o SVG final entra sem reescrever
+o Guia ou a arquitetura de publicação.
 """
 
 from pathlib import Path
+from urllib.parse import quote
 import re
 import os
 
@@ -35,17 +37,24 @@ EXTRA = [
 def render_slot(code: str, description: str) -> str:
     svg = VISUAL_DIR / f"{code}.svg"
     if svg.exists():
+        visual_path = f"assets/visuais/{code}.svg"
+        viewer_src = (
+            "diagram-viewer.html?src=" + quote(visual_path, safe="") +
+            "&alt=" + quote(description, safe="")
+        )
         return (
             f'<div class="visual-slot" id="{code.lower()}">\n'
-            f'  <img src="assets/visuais/{code}.svg" alt="{description}" class="visual-svg">\n'
-            f'  <p class="visual-caption"><strong>{code}</strong> — {description}</p>\n'
+            f'  <iframe class="visual-frame" src="{viewer_src}" '
+            f'title="{code} — visual interativo" loading="lazy"></iframe>\n'
+            f'  <p class="visual-caption"><strong>{code}</strong> — {description}. '
+            f'Use a roda do mouse ou os controles para ampliar e arraste para navegar.</p>\n'
             f'</div>'
         )
     return (
         f'<div class="visual-placeholder" id="{code.lower()}">\n'
         f'  <strong>{code}</strong><br>\n'
         f'  {description}<br>\n'
-        f'  <small>Placeholder do Pilot 01 — o arquivo final será inserido sem alterar esta posição.</small>\n'
+        f'  <small>Visual final pendente — o arquivo poderá ser inserido sem alterar esta posição.</small>\n'
         f'</div>'
     )
 
