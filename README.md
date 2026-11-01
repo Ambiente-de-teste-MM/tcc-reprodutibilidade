@@ -4,6 +4,11 @@ Repositório público da análise empírica do TCC **Determinantes Econômicas d
 
 Esta distribuição reúne o site Quarto/webR, o Guia de Execução e Reprodutibilidade e o pacote público para reprodução local em R.
 
+<!-- PERSONAL-METADATA:START -->
+**Site de reprodução:** https://ambiente-de-teste-mm.github.io/tcc-reprodutibilidade/  
+**Repositório:** https://github.com/Ambiente-de-teste-MM/tcc-reprodutibilidade
+<!-- PERSONAL-METADATA:END -->
+
 ## Conteúdo
 
 - `guia/` — fonte estática do Guia de Execução e Reprodutibilidade em R;
@@ -21,4 +26,4 @@ Consulte `reproducibilidade/documentacao/fontes-e-licencas.md` para proveniênci
 
 A página **Execução no navegador** permite executar o núcleo analítico com R via webR. Para reprodução local, consulte `reproducibilidade/README.md`.
 
-Os visuais editoriais do Guia ainda podem aparecer como placeholders. Eles são slots estáveis e podem ser substituídos posteriormente pelos SVGs finais sem modificar a arquitetura analítica ou de publicação.
+Os visuais editoriais do Guia são incorporados como SVGs navegáveis por pan/zoom. O slot V03 permanece temporariamente como placeholder até o render final de sua fonte Mermaid corrigida.
