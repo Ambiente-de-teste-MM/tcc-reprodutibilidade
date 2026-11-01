@@ -1,9 +1,27 @@
 version: 1
 visuals:
-  V01: {status: explicit-guide-marker}
-  V02: {status: explicit-guide-marker}
-  V03: {status: explicit-guide-marker}
-  V04: {status: planned}
-  V05: {status: planned-implementation-detail}
-  V06: {status: planned}
-  V07: {status: optional-disabled}
+  V01:
+    status: explicit-guide-marker
+    title: "Arquitetura das especificações E1 → E2 / E3 → E4"
+  V02:
+    status: explicit-guide-marker
+    title: "Fontes, painel, transformações e estimação"
+  V03:
+    status: explicit-guide-marker
+    title: "Rotas navegador, pacote local e referência"
+  V04:
+    status: planned
+    after_contains: "A participação fóssil é calculada a partir da soma das séries de consumo de gás, petróleo e carvão"
+    title: "Construção da participação de combustíveis fósseis (FFS)"
+  V05:
+    status: planned-implementation-detail
+    after_contains: "O script principal encadeia as etapas necessárias para transformar os arquivos distribuídos nos resultados da reprodução"
+    title: "Linhagem das variáveis, preparação e estimação"
+  V06:
+    status: planned
+    after_contains: "Os diagnósticos qualificam a interpretação das estimações sem constituir novas especificações ou hipóteses"
+    title: "Diagnósticos, aplicabilidade e limites de interpretação"
+  V07:
+    status: optional-disabled
+    after_contains: "Com a inclusão de LULUCF, H1 e H2a continuam sem suporte"
+    title: "Sensibilidades predefinidas e alcance das conclusões"

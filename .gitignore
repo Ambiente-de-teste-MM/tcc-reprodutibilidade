@@ -1,20 +1,12 @@
-# Sistema / editores
 .DS_Store
 Thumbs.db
-.vscode/
+site/_site/
 .Rproj.user/
 .Rhistory
 .RData
-
-# Builds
-site/_site/
-_site/
-build/
 *.log
-
-# Resultados correntes não congelados
 reproducibilidade/resultados/*
 !reproducibilidade/resultados/.gitkeep
 
-# Conteúdo gerado do Guia
+# Conteúdo gerado pelo workflow
 site/conteudo/guia-site.md

@@ -1,0 +1,7 @@
+source_key,provider,filename,role,md5_expected
+wdi_economy_composition,World Development Indicators / World Bank,tcc_data_source_wdi_economy-composition_2026-08-31_v01.xlsx,"PIB real per capita; intensidade energética; agricultura; indústria",11cd7bb1eb11f83899625b09f1383c9f
+wdi_population,World Development Indicators / World Bank,tcc_data_source_wdi_population-plus-fossil-share_2026-08-31_v01.xlsx,população,ffe14c2407a18794326f390650f6190b
+climate_watch_ghg,Climate Watch / World Resources Institute,tcc_data_source_climate-watch_ghg-historical_2026-08-31_v01.csv,"GEE incluindo e excluindo LULUCF",413f54f2016c82fb2f83c28f343bf211
+owid_fossil_components,Our World in Data,tcc_data_source_owid_fossil-consumption-by-fuel_2026-08-31_v01.csv,"gás; petróleo; carvão",e1a46c8a03d96db5aa11aefcd6b40bbb
+owid_total_energy_supply,Our World in Data,tcc_data_source_owid_total-energy-supply_2026-08-31_v01.csv,oferta total de energia,1f1a5e4e0a1e3742607db37946235a65
+canonical_panel,Stage VIII canonical analytical layer,tcc_data_panel-canonical-mercosur_1990-2023_2026-10-21_v01.csv,"painel analítico de referência; 170 observações país-ano",e71061bfdeb3ba8ea9f258905727718c

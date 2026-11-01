@@ -1,14 +1,149 @@
 ---
 title: "Execução no navegador"
+format: live-html
+engine: knitr
+
+resources:
+  - data/tcc_data_panel-canonical-mercosur_1990-2023_2026-10-21_v01.csv
+  - recursos/execucao-web/full-analysis.R
+  - recursos/execucao-web/modules/01_configuracao.R
+  - recursos/execucao-web/modules/02_preparacao_dados.R
+  - recursos/execucao-web/modules/03_diagnosticos.R
+  - recursos/execucao-web/modules/04_estimacao_principal.R
+  - recursos/execucao-web/modules/05_sensibilidades.R
+
+webr:
+  packages:
+    - cointReg
+  resources:
+    - data/tcc_data_panel-canonical-mercosur_1990-2023_2026-10-21_v01.csv
+    - recursos/execucao-web/full-analysis.R
+    - recursos/execucao-web/modules/01_configuracao.R
+    - recursos/execucao-web/modules/02_preparacao_dados.R
+    - recursos/execucao-web/modules/03_diagnosticos.R
+    - recursos/execucao-web/modules/04_estimacao_principal.R
+    - recursos/execucao-web/modules/05_sensibilidades.R
 ---
 
-**A execução no navegador utilizará webR para reproduzir as etapas selecionadas da análise sem exigir instalação local de R.**
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
 
-::: {.callout-warning title="Pilot 01 — integração em andamento"}
-O núcleo E1–E4 já teve sua viabilidade testada anteriormente. Nesta montagem, a posição e a narrativa da execução estão definidas; a integração completa dos blocos executáveis será inserida e validada contra a referência canônica do autor antes da publicação final.
+**A execução no navegador reproduz a camada analítica do TCC diretamente em R: E1–E4, diagnósticos pós-estimação e sensibilidades B08/B09.** A montagem utiliza cópias exatas dos módulos analíticos do pacote canônico e o mesmo painel de 170 observações utilizado pela reprodução local.
+
+::: {.callout-note title="Fronteira entre a rota web e a reprodução local"}
+A superfície pública do navegador parte do **painel analítico canônico distribuído**. A reconstrução anterior — cinco fontes preservadas → extratos normalizados → painel — permanece na reprodução local, porque os snapshots de terceiros são conservados no repositório privado e não são redistribuídos automaticamente. A fronteira de publicação muda a forma de entregar os dados, não as especificações, os estimadores, os diagnósticos ou as sensibilidades executados a partir do painel.
 :::
 
-## Área executável
+## 1. Verificar o ambiente no navegador
 
-> **PLACEHOLDER WEBR — PILOT 01**  
-> Este bloco será substituído pela implementação Quarto Live/webR validada.
+O primeiro bloco confirma que o R do navegador iniciou e que `cointReg`, dependência econométrica da execução, está disponível.
+
+```{webr}
+R.version.string
+packageVersion("cointReg")
+library(cointReg)
+
+exists(
+  "cointRegFM",
+  where = asNamespace("cointReg"),
+  inherits = FALSE
+)
+```
+
+## 2. Executar a análise
+
+**Este bloco encadeia o mesmo núcleo analítico dos módulos canônicos `01–05`.** Ele valida o painel, prepara as transformações, estima E1–E4, executa B07 e calcula as sensibilidades B08 e B09.
+
+```{webr}
+source("recursos/execucao-web/full-analysis.R")
+
+resultado_web <- tcc_web_run_full(
+  "data/tcc_data_panel-canonical-mercosur_1990-2023_2026-10-21_v01.csv",
+  validate = TRUE
+)
+
+tcc_web_primary_display(resultado_web)
+
+cat(
+  "\nMaior diferença absoluta contra o benchmark E1–E4:",
+  format(resultado_web$max_abs_diff, scientific = TRUE),
+  "\nTolerância:",
+  format(resultado_web$tolerance, scientific = TRUE),
+  "\n"
+)
+```
+
+**A execução é interrompida se os coeficientes do núcleo principal excederem a tolerância de `1e-6` ou se as conclusões substantivas congeladas não forem reproduzidas.** Essa verificação é adicional aos controles internos dos módulos analíticos.
+
+## 3. Diagnósticos B07
+
+**Os diagnósticos qualificam a interpretação das estimativas congeladas; eles não selecionam automaticamente um novo estimador nem redefinem hipóteses.** A saída guiada apresenta os diagnósticos residuais por especificação, dependência transversal e o gate complementar de cointegração aplicado a E1.
+
+```{webr}
+diag_web <- tcc_web_diagnostics_display(resultado_web)
+
+diag_web$country_summary
+diag_web$residual_cd
+diag_web$e1_cpr
+```
+
+O resumo do gate CPR de E1 pode ser consultado separadamente:
+
+```{webr}
+diag_web$e1_cpr_summary
+```
+
+::: {.callout-warning title="Limite de interpretação"}
+B07 é evidência pós-estimação. Autocorrelação, heterocedasticidade, tendência residual e dependência transversal qualificam a leitura dos resultados, mas não reabrem automaticamente a estimação FM-OLS. O teste CPR formal complementar permanece restrito a E1; E2–E4 conservam a fronteira inferencial operacional adotada na metodologia.
+:::
+
+## 4. Sensibilidade B08 — exclusões predefinidas
+
+**B08 avalia como as estimativas pontuais respondem às exclusões de qualidade/quebra definidas previamente.** Não se trata de uma nova amostra principal nem de uma busca por especificações favoráveis.
+
+```{webr}
+sens_web <- tcc_web_sensitivities_display(resultado_web)
+
+sens_web$b08_model_summary
+sens_web$b08_primary_vs_reduced
+```
+
+::: {.callout-note title="Regra de B08"}
+B08 permanece uma sensibilidade descritiva de estimativas pontuais. O centro de renda continua congelado no valor do painel completo, a observação Bolívia-2000 gera uma transição temporal irregular quando excluída e nenhuma inferência formal da amostra reduzida é promovida a resultado principal.
+:::
+
+## 5. Sensibilidade B09 — inclusão de LULUCF
+
+**B09 mantém a amostra completa e troca a fronteira da variável dependente para emissões per capita incluindo LULUCF.** Esta é uma sensibilidade de mensuração do desfecho; não substitui a variável dependente principal do TCC.
+
+```{webr}
+sens_web$b09_outcome_summary
+sens_web$hypotheses
+```
+
+Para inspecionar as mudanças coeficiente a coeficiente:
+
+```{webr}
+sens_web$b09_primary_vs_lulucf
+```
+
+A leitura substantiva central permanece a mesma: H1 e H2a não recebem suporte no resultado principal; H2b e H3 recebem suporte com a variável dependente principal, mas esse suporte não se mantém quando LULUCF é incluído.
+
+## 6. O que a versão web executa — e o que fica no pacote local
+
+A execução no navegador cobre:
+
+- preparação das transformações analíticas a partir do painel canônico;
+- estimações E1–E4;
+- inferência e avaliação das hipóteses implementadas nos módulos principais;
+- diagnósticos B07;
+- sensibilidades B08 e B09.
+
+A reprodução local continua sendo a rota de auditoria integral para:
+
+- reconstruir o painel a partir dos cinco arquivos-fonte preservados;
+- gerar todos os extratos normalizados;
+- escrever o conjunto completo de tabelas, figuras, logs e manifestos;
+- registrar e comparar o ambiente computacional;
+- congelar posteriormente a referência da execução local validada do autor.
+
+[Ver arquivos e reprodução local](arquivos.qmd)

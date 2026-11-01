@@ -1,4 +1,4 @@
-name: Renderizar site Quarto — Pilot 01
+name: Validar e publicar site Quarto/webR
 
 on:
   workflow_dispatch:
@@ -14,14 +14,90 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Instalar R
+        uses: r-lib/actions/setup-r@v2
+
+      - name: Instalar dependências analíticas e de renderização
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::cointReg
+            any::openxlsx
+            any::ggplot2
+            any::scales
+            any::svglite
+            any::ragg
+            any::systemfonts
+            any::knitr
+            any::rmarkdown
+          cache: false
+
+      - name: Validar pacote público local
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd reproducibilidade
+          Rscript --vanilla executar_analise.R
+          test -f resultados/logs/run_summary.csv
+          test -f resultados/tabelas/tcc_resultados-empiricos.xlsx
+          test -f resultados/figuras/figures_manifest.csv
+          cat resultados/logs/run_summary.csv
+
+      - name: Preparar painel canônico do site
+        run: python scripts/preparar_dados_site.py
+
+      - name: Validar núcleo analítico do navegador em R nativo
+        shell: bash
+        run: |
+          set -euo pipefail
+          Rscript --vanilla - <<'RS'
+          source("site/recursos/execucao-web/full-analysis.R")
+          x <- tcc_web_run_full(
+            "site/data/tcc_data_panel-canonical-mercosur_1990-2023_2026-10-21_v01.csv",
+            validate = TRUE
+          )
+          print(tcc_web_primary_display(x))
+          print(tcc_web_diagnostics_display(x)$e1_cpr_summary)
+          print(tcc_web_sensitivities_display(x)$hypotheses)
+          cat("max_abs_diff=", format(x$max_abs_diff, scientific = TRUE), "\n", sep = "")
+          RS
+
       - name: Instalar Quarto
         uses: quarto-dev/quarto-actions/setup@v2
-      - name: Preparar Guia para o site
+
+      - name: Fixar Quarto Live v0.1.3
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch v0.1.3 https://github.com/r-wasm/quarto-live.git /tmp/quarto-live
+          rm -rf site/_extensions/r-wasm/live
+          mkdir -p site/_extensions/r-wasm
+          cp -R /tmp/quarto-live/_extensions/live site/_extensions/r-wasm/live
+          test -f site/_extensions/r-wasm/live/_extension.yml
+
+      - name: Preparar Guia com placeholders/visuais disponíveis
         run: python scripts/preparar_guia_site.py
+
       - name: Renderizar site
         run: quarto render site
+
+      - name: Verificar saída estática mínima
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f site/_site/index.html
+          test -f site/_site/guia.html
+          test -f site/_site/execucao.html
+          test -f site/_site/arquivos.html
+          grep -q "Diagnósticos B07" site/_site/execucao.html
+          grep -q "Sensibilidade B08" site/_site/execucao.html
+          grep -q "Sensibilidade B09" site/_site/execucao.html
+          grep -Eq "visual-placeholder|visual-slot" site/_site/guia.html
+
       - name: Configurar Pages
         uses: actions/configure-pages@v5
+
       - name: Enviar artefato do Pages
         uses: actions/upload-pages-artifact@v4
         with:
