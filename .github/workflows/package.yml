@@ -1,4 +1,4 @@
-name: Montar pacote de reprodução — Pilot 01
+name: Montar pacote de reprodução
 
 on:
   workflow_dispatch:
