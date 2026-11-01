@@ -2,13 +2,11 @@
 """Gera a versão de site do Guia sem alterar sua fonte canônica.
 
 - V01–V03: substituem marcadores explícitos já presentes no Guia.
-- V04–V06: slots adicionais em posições editoriais definidas.
-- V07: opcional e desabilitado por padrão, conforme o controle editorial.
+- V04–V07: slots adicionais em posições editoriais definidas.
 
 Se o SVG final existir, ele é incorporado pelo viewer Panzoom isolado; caso
-contrário, a posição é ocupada por um placeholder visível. Assim, o site pode
-ser publicado antes da conclusão dos visuais e o SVG final entra sem reescrever
-o Guia ou a arquitetura de publicação.
+contrário, a posição é ocupada por um placeholder visível. V03 permanece como
+o único placeholder esperado enquanto seu render corrigido não for produzido.
 """
 
 from pathlib import Path
@@ -30,7 +28,7 @@ EXTRA = [
     ("V06", "Diagnósticos, aplicabilidade e limites de interpretação",
      "Os diagnósticos qualificam a interpretação das estimações sem constituir novas especificações ou hipóteses", True),
     ("V07", "Sensibilidades predefinidas e alcance das conclusões",
-     "Com a inclusão de LULUCF, H1 e H2a continuam sem suporte", os.getenv("TCC_INCLUDE_V07", "0") == "1"),
+     "Com a inclusão de LULUCF, H1 e H2a continuam sem suporte", os.getenv("TCC_INCLUDE_V07", "1") != "0"),
 ]
 
 
