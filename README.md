@@ -7,7 +7,8 @@ Esta distribuição reúne o site Quarto/webR, o Guia de Execução e Reprodutib
 <!-- PERSONAL-METADATA:START -->
 **Site de reprodução:** https://ambiente-de-teste-mm.github.io/tcc-reprodutibilidade/  
 **Repositório:** https://github.com/Ambiente-de-teste-MM/tcc-reprodutibilidade  
-**Autor:** MATHEUS MOSER
+**Autor:** MATHEUS MOSER  
+**DOI:** https://doi.org/10.5281/zenodo.23873233
 <!-- PERSONAL-METADATA:END -->
 
 ## Conteúdo

@@ -13,6 +13,8 @@ Este site acompanha o TCC e organiza sua reprodução empírica em três rotas: 
 ::: {.callout-note title="Publicação e código"}
 **Autor:** MATHEUS MOSER  
 **Repositório público:** [https://github.com/Ambiente-de-teste-MM/tcc-reprodutibilidade](https://github.com/Ambiente-de-teste-MM/tcc-reprodutibilidade)
+  
+**DOI:** [https://doi.org/10.5281/zenodo.23873233](https://doi.org/10.5281/zenodo.23873233)
 :::
 <!-- PERSONAL-METADATA:END -->
 
