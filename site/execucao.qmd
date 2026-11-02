@@ -29,6 +29,10 @@ webr:
 
 **A execução no navegador reproduz a camada analítica do TCC diretamente em R: E1–E4, diagnósticos pós-estimação e análises de sensibilidade.** A montagem utiliza cópias exatas dos módulos analíticos do pacote canônico e o mesmo painel de 170 observações utilizado pela reprodução local.
 
+::: {.callout-warning title="Uso em dispositivos móveis"}
+A página de execução no navegador depende de webR, blocos de código interativos e saídas tabulares que podem apresentar limitações de renderização ou usabilidade em navegadores móveis. Para executar e inspecionar a reprodução com maior estabilidade, **recomenda-se o uso de um computador de mesa ou notebook**.
+:::
+
 ::: {.callout-note title="Sobre os códigos B07, B08 e B09"}
 Durante o desenvolvimento e a fase de testes, a implementação foi organizada em **blocos numerados de trabalho e validação** para manter rastreabilidade entre decisões metodológicas, scripts e resultados. Três desses identificadores foram preservados no código e nos nomes internos dos arquivos: **B07** corresponde aos diagnósticos pós-estimação; **B08**, à sensibilidade a exclusões predefinidas de observações; e **B09**, à sensibilidade à inclusão de LULUCF na variável dependente. Esses códigos são rótulos de implementação, não novas especificações econométricas nem hipóteses adicionais.
 :::
