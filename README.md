@@ -27,4 +27,8 @@ Consulte `reproducibilidade/documentacao/fontes-e-licencas.md` para proveniênci
 
 A página **Execução no navegador** permite executar o núcleo analítico com R via webR. Para reprodução local, consulte `reproducibilidade/README.md`.
 
-Os visuais editoriais do Guia são incorporados como SVGs navegáveis por pan/zoom. O slot V03 permanece temporariamente como placeholder até o render final de sua fonte Mermaid corrigida.
+Os visuais editoriais V01–V07 do Guia são incorporados como SVGs navegáveis por pan/zoom.
+
+## Licenciamento
+
+O repositório usa licenciamento por escopo: código original sob MIT; documentação, textos do site/Guia e visualizações editoriais originais sob CC BY 4.0; e o painel analítico derivado sujeito aos termos e atribuições das fontes descritos em `reproducibilidade/documentacao/fontes-e-licencas.md`. Consulte `LICENSE.md` para os detalhes.
